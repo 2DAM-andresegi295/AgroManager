@@ -7,12 +7,6 @@ import { Component } from '@angular/core';
   standalone: false,
 })
 export class HomePage {
-goToRegister() {
-throw new Error('Method not implemented.');
-}
-goToLogin() {
-throw new Error('Method not implemented.');
-}
 
   constructor() {}
 

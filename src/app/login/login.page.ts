@@ -1,21 +1,41 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  standalone:false,
+  standalone: false,
 })
 export class LoginPage implements OnInit {
-email: any;
-password: any;
-login() {
-throw new Error('Method not implemented.');
-}
+    email: string = '';
+    password: string = '';
 
-  constructor() { }
+  errorMessage: string = '';
 
-  ngOnInit() {
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private loadingCtrl: LoadingController
+  ) {}
+
+  ngOnInit(): void {}
+
+  async login() {
+    const loading = await this.loadingCtrl.create({
+      message: 'Iniciando sesión...',
+    });
+    await loading.present();
+
+    try {
+      await this.auth.login(this.email, this.password);
+      this.router.navigate(['/home']);
+    } catch (error) {
+      this.errorMessage = (error as Error).message;
+    } finally {
+      loading.dismiss();
+    }
   }
-
 }
