@@ -6,7 +6,7 @@ import { getAnalytics } from "firebase/analytics";
 
 export const environment = {
   production: false,
-  firebaseConfig : {
+  firebase : {
     apiKey: "AIzaSyA6bU_OuTFQ4zYmEtAWppggYVdo_W7on78",
     authDomain: "agromanager-e2ec7.firebaseapp.com",
     projectId: "agromanager-e2ec7",

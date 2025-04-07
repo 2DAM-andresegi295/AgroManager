@@ -19,7 +19,7 @@ export class AuthService {
     }
   }
   // Registro con email/password
-  async register(email: string, password: string): Promise<any> {
+  async registrar(email: string, password: string): Promise<any> {
     try {
       const result = await this.afAuth.createUserWithEmailAndPassword(email, password);
       return result;
