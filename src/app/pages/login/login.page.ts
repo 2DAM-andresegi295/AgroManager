@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 
@@ -31,7 +31,7 @@ export class LoginPage implements OnInit {
 
     try {
       await this.auth.login(this.email, this.password);
-      this.router.navigate(['/home']);
+      this.router.navigate(['/parcelas']);
     } catch (error) {
       this.errorMessage = (error as Error).message;
     } finally {

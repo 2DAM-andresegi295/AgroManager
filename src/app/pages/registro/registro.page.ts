@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-registro',
@@ -36,10 +36,10 @@ export class RegistroPage implements OnInit {
 
     try {
       const result = await this.authService.registrar(
-        this.usuario.email, 
+        this.usuario.email,
         this.usuario.password,
       );
-      
+
       // Redirigir después de registro exitoso
       this.router.navigate(['/login']);
     } catch (error) {

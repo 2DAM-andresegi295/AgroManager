@@ -9,4 +9,6 @@ export const environment = {
     appId: "1:904391927976:web:5d883fbe73e7a40b71ba9d",
     measurementId: "G-JPZEQ03SFX"
   },
+  googleMapsApiKey: 'AIzaSyC2IvUIxoYI1yJ5rR7y5qW04H6sRZ8UeDw',
+
 };
