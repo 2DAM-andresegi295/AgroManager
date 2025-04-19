@@ -1,0 +1,26 @@
+<app-menu
+  [contentId]="'add-parcela-content'"
+  [title]="'Añadir Parcela'"
+  [items]="[
+    { text: 'Volver', url: '/parcelas' },
+    { text: 'Guardar', url: '/parcelas' }
+  ]">
+</app-menu>
+
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+  <div class="ion-page" id="add-parcela-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button menu="add-parcela-content"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Añadir Parcela</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <h1>Formulario</h1>
+    </ion-content>
+  </div>
+</ion-app>
+

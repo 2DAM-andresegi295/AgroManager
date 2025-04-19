@@ -1,15 +1,25 @@
-<app-menu></app-menu>
-<div class="ion-page" id="main-content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Parcelas</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
-    <app-map
-    (clickParcela)="abrirMenuLateral()"></app-map>
-  </ion-content>
-</div>
+<app-menu
+  [contentId]="'parcelas-content'"
+  [title]="'Parcelas'"
+  [items]="[
+    { text: 'Mis parcelas', url: '/parcelas' },
+    { text: 'Añadir parcela', url: '/add-parcela' }
+  ]">
+</app-menu>
+
+<ion-app>
+  <ion-router-outlet></ion-router-outlet>
+  <div class="ion-page" id="parcelas-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-menu-button menu="parcelas-content"></ion-menu-button>
+        </ion-buttons>
+        <ion-title>Parcelas</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <app-map></app-map>
+    </ion-content>
+  </div>
+</ion-app>

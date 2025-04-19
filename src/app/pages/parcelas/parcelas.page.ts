@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonMenu } from '@ionic/angular';
 import { MenuComponent } from 'src/app/components/menu/menu.component';
 
 @Component({
@@ -16,7 +15,8 @@ export class ParcelasPage implements OnInit {
 
   ngOnInit() {
   }
+
   abrirMenuLateral() {
-    this.appMenu.abrirMenuLateral();
+    //this.appMenu.abrirMenuLateral();
   }
 }

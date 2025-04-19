@@ -1,18 +1,39 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonMenu } from '@ionic/angular';
+import { Component, Input } from '@angular/core';
+import { MenuController } from '@ionic/angular';
+
 @Component({
   selector: 'app-menu',
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.scss'],
+  template: `
+    <ion-menu [contentId]="contentId" [menuId]="contentId">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>{{ title }}</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <ion-list>
+          <ion-item
+            *ngFor="let item of items"
+            button
+            (click)="navigateTo(item.url)">
+            <ion-label>{{ item.text }}</ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ion-menu>
+  `,
   standalone: false,
 })
-export class MenuComponent  implements OnInit {
-  @ViewChild(IonMenu) ionMenu!: IonMenu;
+export class MenuComponent {
+  @Input() contentId: string | undefined;
+  @Input() title: string = 'Menú';
+  @Input() items: { text: string, url: string }[] = [];
 
-  constructor() { }
+  constructor(private menuCtrl: MenuController) {}
 
-  ngOnInit() {}
-  abrirMenuLateral() {
-    this.ionMenu.open();
+  navigateTo(url: string) {
+    this.menuCtrl.close(this.contentId).then(() => {
+      window.location.href = url; // Solución definitiva para la navegación
+    });
   }
 }
