@@ -4,23 +4,55 @@
   [items]="[
     { text: 'Volver', url: '/parcelas' },
     { text: 'Guardar', url: '/parcelas' }
-  ]">
+  ]"
+>
 </app-menu>
-
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
-  <div class="ion-page" id="add-parcela-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button menu="add-parcela-content"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Añadir Parcela</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <h1>Formulario</h1>
-    </ion-content>
-  </div>
-</ion-app>
-
+<div class="ion-page" id="add-parcela-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button menu="add-parcela-content"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Añadir Parcela</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <div class="form-add" *ngFor="let vertice of vertices; let i=index">
+      <!-- Botón que solo aparece en el último vértice -->
+      <div *ngIf="i+1==vertices.length;else ultimo">
+        <h1>Vértice {{i+1}}</h1>
+        <div class="vertice">
+          <ion-label>Latitud: </ion-label>
+          <ion-input [value]="ultimoClick.lat"></ion-input>
+          <ion-label>Altitud: </ion-label>
+          <ion-input [value]="ultimoClick.lng"></ion-input>
+          <ion-button
+            (click)="agregarVertice({lat:vertice.lat,lng:vertice.lng})"
+            expand="block"
+            color="primary"
+          >
+            <ion-icon name="add" slot="start"></ion-icon>
+            Añadir
+          </ion-button>
+        </div>
+      </div>
+      <ng-template #ultimo>
+        <h1>Vértice {{i+1}}</h1>
+        <div class="vertice">
+          <ion-label>Latitud: </ion-label>
+          <ion-input [value]="vertices[i].lat"></ion-input>
+          <ion-label>Altitud: </ion-label>
+          <ion-input [value]="vertices[i].lng"></ion-input>
+        </div>
+      </ng-template>
+    </div>
+    <div class="mapa">
+      <app-map
+        #mapadd
+        [isAdd]="true"
+        (marcadorCreado)="onMarcadorCreado($event)"
+      >
+      </app-map>
+    </div>
+  </ion-content>
+</div>

@@ -6,20 +6,16 @@
     { text: 'Añadir parcela', url: '/add-parcela' }
   ]">
 </app-menu>
-
-<ion-app>
-  <ion-router-outlet></ion-router-outlet>
   <div class="ion-page" id="parcelas-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
           <ion-menu-button menu="parcelas-content"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Parcelas</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
+      </ion-buttons>
+      <ion-title>Parcelas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
       <app-map></app-map>
-    </ion-content>
-  </div>
-</ion-app>
+  </ion-content>
+</div>

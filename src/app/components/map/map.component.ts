@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { ParcelasService } from './../../services/parcelas/parcelas.service';
+import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Loader } from '@googlemaps/js-api-loader';
+import { IonContent, IonButton, IonCard, IonCardContent } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-map',
@@ -9,48 +11,69 @@ import { Loader } from '@googlemaps/js-api-loader';
   standalone:false,
 })
 export class MapComponent implements OnInit {
+  @Input() isAdd:boolean=false;
   @ViewChild('map', { static: true }) mapElement!: ElementRef;
-  @Output() clickParcela=new EventEmitter<void>();
+  @Output() marcadorCreado = new EventEmitter<google.maps.LatLngLiteral>();
+
+
 
   map: google.maps.Map | undefined;
   polygon: google.maps.Polygon | undefined;
+  ultimoClickLatLng: google.maps.LatLngLiteral | null=null;
+  marcadores: google.maps.Marker[]=[];
+  primerMarcador: boolean=false;
 
-  // Coordenadas de ejemplo para una parcela (lat, lng)
-  parcelCoordinates: google.maps.LatLngLiteral[] = [
-    { lat: 19.4326, lng: -99.1332 },  // Esquina noroeste
-    { lat: 19.4326, lng: -99.1232 },  // Esquina noreste
-    { lat: 19.4226, lng: -99.1232 },  // Esquina sureste
-    { lat: 19.4226, lng: -99.1332 },  // Esquina suroeste
-    { lat: 19.4326, lng: -99.1332 }   // Cierra el polígono
-  ];
+  constructor(private parcelasService:ParcelasService) {
 
-  constructor() { }
-
-  ngOnInit() {
-    this.loadMap();
+  }
+  ngOnInit(): void {
+    this.cargarMapa();
   }
 
-  loadMap() {
+  cargarMapa() {
     const loader = new Loader({
       apiKey: environment.googleMapsApiKey,
       version: "weekly",
     });
 
-    loader.load().then(() => {
-      this.map = new google.maps.Map(this.mapElement.nativeElement, {
-        center: this.calculateCenter(this.parcelCoordinates),
-        zoom: 15,
+    loader.load().then(async ()=>{
+      const centro = await this.parcelasService.getGeolocalizacion();
+      console.log(centro.lat+""+centro.lng);
+
+      this.map=new google.maps.Map(this.mapElement.nativeElement,{
+        center: centro,
+        zoom: 17,
+      });
+      this.marcadores[0]=new google.maps.Marker({
+        position: this.ultimoClickLatLng,
+        map: this.map,
+        animation: google.maps.Animation.DROP
       });
 
-      this.drawParcel();
+      if(this.isAdd){
+
+        this.map.addListener('click',(event: google.maps.MapMouseEvent)=>{
+          if (!event.latLng) return;
+
+          this.ultimoClickLatLng=event.latLng.toJSON();
+
+          marcador.setPosition(this.ultimoClickLatLng);
+
+          this.marcadorCreado.emit(this.ultimoClickLatLng);
+        });
+        let marcador=new google.maps.Marker({
+          position: this.ultimoClickLatLng,
+          map: this.map,
+        });
+      }
     });
   }
 
-  drawParcel() {
+  dibujarParcela(coordenadasParcela: google.maps.LatLngLiteral[]){
     if (!this.map) return;
 
     this.polygon = new google.maps.Polygon({
-      paths: this.parcelCoordinates,
+      paths: coordenadasParcela,
       strokeColor: "#FF0000",
       strokeOpacity: 0.8,
       strokeWeight: 2,
@@ -60,29 +83,28 @@ export class MapComponent implements OnInit {
       draggable: false, // Si quieres que se pueda mover
       map: this.map
     });
-    
-    this.polygon.addListener('click', () => {
-      this.clickParcela.emit(); // Emitir el evento al hacer clic en la parcela
-    });
-
-
-    // Ajustar el zoom para que se vea toda la parcela
-    const bounds = new google.maps.LatLngBounds();
-    this.parcelCoordinates.forEach(coord => {
-      bounds.extend(coord);
-    });
-    this.map.fitBounds(bounds);
+  }
+  LatLngClick(){
+    return this.ultimoClickLatLng;
+  }
+  guardarMarcador(){
+    if(this.primerMarcador){
+      this.marcadores[this.marcadores.length-1]=new google.maps.Marker({
+        position: this.ultimoClickLatLng,
+        map: this.map,
+        animation: google.maps.Animation.DROP
+      });
+      //this.marcadores[this.marcadores.length-1].setPosition(this.ultimoClickLatLng);
+    }
+    else{
+      this.marcadores[0]=new google.maps.Marker({
+        position: this.ultimoClickLatLng,
+        map: this.map,
+        animation: google.maps.Animation.DROP
+      });
+      this.marcadores[0].setPosition(this.ultimoClickLatLng);
+      this.primerMarcador=true;
+    }
   }
 
-  calculateCenter(coords: google.maps.LatLngLiteral[]): google.maps.LatLngLiteral {
-    let lat = 0, lng = 0;
-    coords.forEach(coord => {
-      lat += coord.lat;
-      lng += coord.lng;
-    });
-    return {
-      lat: lat / coords.length,
-      lng: lng / coords.length
-    };
-  }
 }

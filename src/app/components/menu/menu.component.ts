@@ -3,25 +3,8 @@ import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-menu',
-  template: `
-    <ion-menu [contentId]="contentId" [menuId]="contentId">
-      <ion-header>
-        <ion-toolbar>
-          <ion-title>{{ title }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content>
-        <ion-list>
-          <ion-item
-            *ngFor="let item of items"
-            button
-            (click)="navigateTo(item.url)">
-            <ion-label>{{ item.text }}</ion-label>
-          </ion-item>
-        </ion-list>
-      </ion-content>
-    </ion-menu>
-  `,
+  templateUrl: './menu.component.html',
+  styleUrls: ['./menu.component.scss'],
   standalone: false,
 })
 export class MenuComponent {
@@ -33,7 +16,7 @@ export class MenuComponent {
 
   navigateTo(url: string) {
     this.menuCtrl.close(this.contentId).then(() => {
-      window.location.href = url; // Solución definitiva para la navegación
+      window.location.href = url;
     });
   }
 }
