@@ -28,12 +28,23 @@
           <ion-input [value]="ultimoClick.lng"></ion-input>
           <ion-button
             (click)="agregarVertice({lat:vertice.lat,lng:vertice.lng})"
-            expand="block"
+            expand="full"
             color="primary"
           >
             <ion-icon name="add" slot="start"></ion-icon>
             Añadir
           </ion-button>
+          <div *ngIf="i>2">
+            <ion-button
+            (click)="crearParcela()"
+            expand="full"
+            color="success"
+            style="white-space: nowrap;"
+          >
+            <ion-icon name="create" slot="start"></ion-icon>
+            Crear parcela
+          </ion-button>
+          </div>
         </div>
       </div>
       <ng-template #ultimo>
