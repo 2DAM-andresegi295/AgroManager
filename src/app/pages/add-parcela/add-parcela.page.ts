@@ -39,7 +39,7 @@ export class AddParcelaPage implements OnInit {
   }
   async crearParcela() {
     try {
-      await this.parcelasService.addParcela('prueba', this.vertices, 'ganado');
+      await this.parcelasService.addParcela({name:'prueba'});
     } catch (error) {
       console.error(error);
     }

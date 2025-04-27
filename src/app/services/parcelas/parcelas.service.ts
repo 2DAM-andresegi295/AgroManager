@@ -1,42 +1,25 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
-import { Geolocation } from '@capacitor/geolocation';
+import { Firestore } from '@angular/fire/firestore';
+import { addDoc, collection } from 'firebase/firestore';
+import Parcela from 'src/app/interfaces/parcela.interface';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class ParcelasService {
   constructor(
-    private firestore: AngularFirestore,
-    private afAuth: AngularFireAuth
+    private firestore: Firestore,
+    private auth: Auth
   ) {}
 
-  async addParcela(
-    nombre: string,
-    coordenadas: google.maps.LatLngLiteral[],
-    tipo: string
-  ) {
-    const user = await this.afAuth.currentUser;
+  async addParcela(parcela:Parcela) {
+    const user = await this.auth.currentUser;
     if (!user) throw new Error('Usuario no autenticado');
 
-    return this.firestore.collection('parcelas').add({
-      userId: user.uid,
-      nombre,
-      coordenadas,
-      tipo,
-      fechaCreacion: new Date(),
-    });
-  }
+    const parcelaRef=collection(this.firestore,'parcela');
 
-  async getGeolocalizacion() {
-    const coordenadas = await Geolocation.getCurrentPosition();
-
-    const latLngLiteral: google.maps.LatLngLiteral = {
-      lat: coordenadas.coords.latitude,
-      lng: coordenadas.coords.longitude
-    };
-
-    return latLngLiteral;
+    return addDoc(parcelaRef,parcela)
   }
 }

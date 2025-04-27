@@ -1,3 +1,4 @@
+import { GeolocaclizacionService } from './../../services/geolocalizacion/geolocaclizacion.service';
 import { ParcelasService } from './../../services/parcelas/parcelas.service';
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
@@ -23,7 +24,7 @@ export class MapComponent implements OnInit {
   marcadores: google.maps.Marker[]=[];
   primerMarcador: boolean=false;
 
-  constructor(private parcelasService:ParcelasService) {
+  constructor( private geolocalizacion:GeolocaclizacionService) {
 
   }
   ngOnInit(): void {
@@ -37,7 +38,7 @@ export class MapComponent implements OnInit {
     });
 
     loader.load().then(async ()=>{
-      const centro = await this.parcelasService.getGeolocalizacion();
+      const centro = await this.geolocalizacion.getGeolocalizacion();
       console.log(centro.lat+""+centro.lng);
 
       this.map=new google.maps.Map(this.mapElement.nativeElement,{
