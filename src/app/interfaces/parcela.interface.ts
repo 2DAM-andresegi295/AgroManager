@@ -1,4 +1,6 @@
 export default interface Parcela{
-  id?: string;
-  name: string
+  name: string,
+  idUsuario: string,
+  vertices: google.maps.LatLngLiteral[],
+  tipoExplotacion: string,
 }

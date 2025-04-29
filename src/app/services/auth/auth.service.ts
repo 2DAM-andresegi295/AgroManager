@@ -1,18 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+} from '@angular/fire/auth';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
-  constructor(private auth: Auth, private router: Router) { }
+  constructor(private auth: Auth, private router: Router) {}
 
   // Login con email/password
   async login(email: string, password: string): Promise<any> {
     try {
-      const result = await signInWithEmailAndPassword(this.auth,email, password);
+      const result = await signInWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       return result;
     } catch (error) {
       throw error;
@@ -21,10 +29,23 @@ export class AuthService {
   // Registro con email/password
   async registrar(email: string, password: string): Promise<any> {
     try {
-      const result = await createUserWithEmailAndPassword(this.auth,email, password);
+      const result = await createUserWithEmailAndPassword(
+        this.auth,
+        email,
+        password
+      );
       return result;
     } catch (error) {
       throw error;
+    }
+  }
+  getUsuario() {
+    const user = this.auth.currentUser;
+    if (user) {
+      return user.uid;
+    } else {
+      console.log('No hay usuario autenticado');
+      return "";
     }
   }
 }

@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth/auth.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
@@ -17,7 +18,8 @@ export class AddParcelaPage implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    private parcelasService: ParcelasService
+    private parcelasService: ParcelasService,
+    private authService:AuthService
   ) {}
 
   ngOnInit() {}
@@ -39,7 +41,7 @@ export class AddParcelaPage implements OnInit {
   }
   async crearParcela() {
     try {
-      await this.parcelasService.addParcela({name:'prueba'});
+      await this.parcelasService.addParcela({name:'prueba',idUsuario:this.authService.getUsuario(),vertices:this.vertices,tipoExplotacion:"prueba"});
     } catch (error) {
       console.error(error);
     }

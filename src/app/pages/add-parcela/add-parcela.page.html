@@ -27,7 +27,7 @@
           <ion-label>Altitud: </ion-label>
           <ion-input [value]="ultimoClick.lng"></ion-input>
           <ion-button
-            (click)="agregarVertice({lat:vertice.lat,lng:vertice.lng})"
+            (click)="agregarVertice({lat:ultimoClick.lat,lng:ultimoClick.lng})"
             expand="full"
             color="primary"
           >

@@ -59,7 +59,7 @@ export class MapComponent implements OnInit {
           this.ultimoClickLatLng=event.latLng.toJSON();
 
           marcador.setPosition(this.ultimoClickLatLng);
-
+          console.log(this.ultimoClickLatLng);
           this.marcadorCreado.emit(this.ultimoClickLatLng);
         });
         let marcador=new google.maps.Marker({
@@ -85,9 +85,7 @@ export class MapComponent implements OnInit {
       map: this.map
     });
   }
-  LatLngClick(){
-    return this.ultimoClickLatLng;
-  }
+
   guardarMarcador(){
     if(this.primerMarcador){
       this.marcadores[this.marcadores.length-1]=new google.maps.Marker({
@@ -106,6 +104,7 @@ export class MapComponent implements OnInit {
       this.marcadores[0].setPosition(this.ultimoClickLatLng);
       this.primerMarcador=true;
     }
+    console.log(this.marcadores)
   }
 
 }

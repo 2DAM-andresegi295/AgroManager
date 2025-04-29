@@ -18,7 +18,7 @@ export class ParcelasService {
     const user = await this.auth.currentUser;
     if (!user) throw new Error('Usuario no autenticado');
 
-    const parcelaRef=collection(this.firestore,'parcela');
+    const parcelaRef=collection(this.firestore,'parcelas');
 
     return addDoc(parcelaRef,parcela)
   }
