@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth/auth.service';
 import { GeolocaclizacionService } from './../../services/geolocalizacion/geolocaclizacion.service';
 import { ParcelasService } from './../../services/parcelas/parcelas.service';
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
@@ -23,55 +24,80 @@ export class MapComponent implements OnInit {
   ultimoClickLatLng: google.maps.LatLngLiteral | null=null;
   marcadores: google.maps.Marker[]=[];
   primerMarcador: boolean=false;
+  parcelas: any[] = [];
 
-  constructor( private geolocalizacion:GeolocaclizacionService) {
+  constructor(
+    private geolocalizacion:GeolocaclizacionService,
+    private parcelasService:ParcelasService,
+    private authService:AuthService
+  ) {
 
   }
-  ngOnInit(): void {
-    this.cargarMapa();
-  }
+  async ngOnInit() {
+    await this.cargarMapa(); // espera a que el mapa esté cargado
 
-  cargarMapa() {
-    const loader = new Loader({
-      apiKey: environment.googleMapsApiKey,
-      version: "weekly",
-    });
+    this.authService.usuario$.subscribe(async user => {
+      if (user) {
+        this.parcelas = await this.parcelasService.getParcelasPorUsuario(user.uid);
+        console.log(this.parcelas);
 
-    loader.load().then(async ()=>{
-      const centro = await this.geolocalizacion.getGeolocalizacion();
-      console.log(centro.lat+""+centro.lng);
-
-      this.map=new google.maps.Map(this.mapElement.nativeElement,{
-        center: centro,
-        zoom: 17,
-      });
-      this.marcadores[0]=new google.maps.Marker({
-        position: this.ultimoClickLatLng,
-        map: this.map,
-        animation: google.maps.Animation.DROP
-      });
-
-      if(this.isAdd){
-
-        this.map.addListener('click',(event: google.maps.MapMouseEvent)=>{
-          if (!event.latLng) return;
-
-          this.ultimoClickLatLng=event.latLng.toJSON();
-
-          marcador.setPosition(this.ultimoClickLatLng);
-          console.log(this.ultimoClickLatLng);
-          this.marcadorCreado.emit(this.ultimoClickLatLng);
-        });
-        let marcador=new google.maps.Marker({
-          position: this.ultimoClickLatLng,
-          map: this.map,
+        this.parcelas.forEach(parcela => {
+          this.dibujarParcela(parcela.vertices);
         });
       }
     });
   }
 
+  cargarMapa(): Promise<void> {
+    return new Promise((resolve) => {
+      const loader = new Loader({
+        apiKey: environment.googleMapsApiKey,
+        version: "weekly",
+      });
+
+      loader.load().then(async () => {
+        const centro = await this.geolocalizacion.getGeolocalizacion();
+        console.log(`Centro del mapa: ${centro.lat}, ${centro.lng}`);
+
+        this.map = new google.maps.Map(this.mapElement.nativeElement, {
+          center: centro,
+          zoom: 17,
+        });
+
+        // Inicializa marcador principal si hay posición
+        if (this.ultimoClickLatLng) {
+          this.marcadores[0] = new google.maps.Marker({
+            position: this.ultimoClickLatLng,
+            map: this.map,
+            animation: google.maps.Animation.DROP
+          });
+        }
+
+        if (this.isAdd) {
+          const marcador = new google.maps.Marker({
+            position: this.ultimoClickLatLng,
+            map: this.map,
+          });
+
+          this.map.addListener('click', (event: google.maps.MapMouseEvent) => {
+            if (!event.latLng) return;
+
+            this.ultimoClickLatLng = event.latLng.toJSON();
+            marcador.setPosition(this.ultimoClickLatLng);
+            console.log('Marcador creado en:', this.ultimoClickLatLng);
+            this.marcadorCreado.emit(this.ultimoClickLatLng);
+          });
+        }
+
+        resolve();
+      });
+    });
+  }
+
+
   dibujarParcela(coordenadasParcela: google.maps.LatLngLiteral[]){
     if (!this.map) return;
+    console.log('Dibujando parcela con:', coordenadasParcela);
 
     this.polygon = new google.maps.Polygon({
       paths: coordenadasParcela,
@@ -104,7 +130,6 @@ export class MapComponent implements OnInit {
       this.marcadores[0].setPosition(this.ultimoClickLatLng);
       this.primerMarcador=true;
     }
-    console.log(this.marcadores)
   }
 
 }

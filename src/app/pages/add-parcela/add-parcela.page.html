@@ -19,7 +19,7 @@
   <ion-content>
     <div class="form-add" *ngFor="let vertice of vertices; let i=index">
       <!-- Botón que solo aparece en el último vértice -->
-      <div *ngIf="i+1==vertices.length;else ultimo">
+      <div *ngIf="i+1==vertices.length;else noUltimo">
         <h1>Vértice {{i+1}}</h1>
         <div class="vertice">
           <ion-label>Latitud: </ion-label>
@@ -27,7 +27,7 @@
           <ion-label>Altitud: </ion-label>
           <ion-input [value]="ultimoClick.lng"></ion-input>
           <ion-button
-            (click)="agregarVertice({lat:ultimoClick.lat,lng:ultimoClick.lng})"
+            (click)="agregarVertice()"
             expand="full"
             color="primary"
           >
@@ -47,7 +47,7 @@
           </div>
         </div>
       </div>
-      <ng-template #ultimo>
+      <ng-template #noUltimo>
         <h1>Vértice {{i+1}}</h1>
         <div class="vertice">
           <ion-label>Latitud: </ion-label>

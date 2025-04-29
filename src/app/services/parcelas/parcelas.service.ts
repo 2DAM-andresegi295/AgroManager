@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Firestore } from '@angular/fire/firestore';
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import Parcela from 'src/app/interfaces/parcela.interface';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from '@angular/fire/auth';
+import { Auth} from '@angular/fire/auth';
 
 
 @Injectable({
@@ -21,5 +21,19 @@ export class ParcelasService {
     const parcelaRef=collection(this.firestore,'parcelas');
 
     return addDoc(parcelaRef,parcela)
+  }
+
+  async getParcelasPorUsuario(idUsuario: string){
+    const parcelasRef = collection(this.firestore, 'parcelas');
+    const q = query(parcelasRef, where('idUsuario', '==', idUsuario));
+    const querySnapshot = await getDocs(q);
+
+    const parcelas = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    return parcelas;
+
   }
 }

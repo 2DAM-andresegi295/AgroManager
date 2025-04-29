@@ -5,13 +5,25 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
   signOut,
+  User,
+  onAuthStateChanged,
 } from '@angular/fire/auth';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private auth: Auth, private router: Router) {}
+  private usuarioActual = new BehaviorSubject<User | null>(null);
+  usuario$ = this.usuarioActual.asObservable();
+
+  constructor(
+    private auth: Auth,
+    private router: Router) {
+    onAuthStateChanged(this.auth, (user) => {
+      this.usuarioActual.next(user);
+    });
+  }
 
   // Login con email/password
   async login(email: string, password: string): Promise<any> {
@@ -39,13 +51,8 @@ export class AuthService {
       throw error;
     }
   }
+
   getUsuario() {
-    const user = this.auth.currentUser;
-    if (user) {
-      return user.uid;
-    } else {
-      console.log('No hay usuario autenticado');
-      return "";
-    }
+    return this.usuarioActual.value?.uid || "";
   }
 }
