@@ -1,3 +1,4 @@
+import { getDocs, query, where } from 'firebase/firestore';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -9,6 +10,7 @@ import {
   onAuthStateChanged,
 } from '@angular/fire/auth';
 import { BehaviorSubject } from 'rxjs';
+import { Firestore, collection, doc, docData } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +21,9 @@ export class AuthService {
 
   constructor(
     private auth: Auth,
-    private router: Router) {
+    private router: Router,
+    private firestore: Firestore
+  ) {
     onAuthStateChanged(this.auth, (user) => {
       this.usuarioActual.next(user);
     });
@@ -52,7 +56,14 @@ export class AuthService {
     }
   }
 
-  getUsuario() {
-    return this.usuarioActual.value?.uid || "";
+  async isAdmin(): Promise<boolean> {
+    const user = this.auth.currentUser;
+    if (!user) return false;
+
+    const administradoresRef = collection(this.firestore, 'administradores');
+    const q = query(administradoresRef, where('uid', '==', user.uid));
+    const querySnapshot = await getDocs(q);
+
+    return querySnapshot.size>0
   }
 }

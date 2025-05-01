@@ -1,5 +1,6 @@
 import { AuthService } from './../../services/auth/auth.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { User } from 'firebase/auth';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 
@@ -53,10 +54,10 @@ export class AddParcelaPage implements OnInit {
       this.vertices[this.vertices.length-1]=this.vertices[0];
 
       // Espera a que el usuario esté cargado
-      const usuario = await new Promise<string | null>((resolve) => {
+      const usuario = await new Promise<User | null>((resolve) => {
         const sub = this.authService.usuario$.subscribe(user => {
           if (user) {
-            resolve(user.uid);
+            resolve(user);
             sub.unsubscribe();
           }
         });
@@ -68,7 +69,8 @@ export class AddParcelaPage implements OnInit {
 
       await this.parcelasService.addParcela({
         name: 'prueba',
-        idUsuario: usuario,
+        idUsuario: usuario.uid,
+        correo: usuario.email,
         vertices: this.vertices,
         tipoExplotacion: 'prueba',
       });

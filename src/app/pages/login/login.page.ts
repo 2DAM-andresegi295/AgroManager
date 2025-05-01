@@ -10,8 +10,8 @@ import { LoadingController } from '@ionic/angular';
   standalone: false,
 })
 export class LoginPage implements OnInit {
-    email: string = '';
-    password: string = '';
+  email: string = '';
+  password: string = '';
 
   errorMessage: string = '';
 
@@ -31,7 +31,12 @@ export class LoginPage implements OnInit {
 
     try {
       await this.auth.login(this.email, this.password);
-      this.router.navigate(['/parcelas']);
+      const esAdmin = await this.auth.isAdmin();
+      if(esAdmin){
+        this.router.navigate(['/admin']);
+      }else{
+        this.router.navigate(['/parcelas']);
+      }
     } catch (error) {
       this.errorMessage = (error as Error).message;
     } finally {

@@ -34,7 +34,7 @@ export class MapComponent implements OnInit {
 
   }
   async ngOnInit() {
-    await this.cargarMapa(); // espera a que el mapa esté cargado
+    await this.cargarMapa();
 
     this.authService.usuario$.subscribe(async user => {
       if (user) {

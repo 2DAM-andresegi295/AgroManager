@@ -26,7 +26,12 @@ const routes: Routes = [
   {
     path: 'add-parcela',
     loadChildren: () => import('./pages/add-parcela/add-parcela.module').then( m => m.AddParcelaPageModule)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule)
   }
+
 
 
 

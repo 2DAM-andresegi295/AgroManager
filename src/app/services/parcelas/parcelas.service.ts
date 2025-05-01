@@ -36,4 +36,15 @@ export class ParcelasService {
     return parcelas;
 
   }
+  async getTodasLasParcelas() {
+    const parcelasRef = collection(this.firestore, 'parcelas');
+    const querySnapshot = await getDocs(parcelasRef);
+
+    const parcelas = querySnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+
+    return parcelas;
+  }
 }
