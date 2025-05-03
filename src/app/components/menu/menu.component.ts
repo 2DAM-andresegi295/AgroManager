@@ -1,3 +1,5 @@
+import { authState } from '@angular/fire/auth';
+import { AuthStateService } from './../../shared/data-access/auth-state.service';
 import { Component, Input } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 
@@ -8,15 +10,22 @@ import { MenuController } from '@ionic/angular';
   standalone: false,
 })
 export class MenuComponent {
+
   @Input() contentId: string | undefined;
   @Input() title: string = 'Menú';
   @Input() items: { text: string, url: string }[] = [];
 
-  constructor(private menuCtrl: MenuController) {}
+  constructor(
+    private menuCtrl: MenuController,
+    private authStateService:AuthStateService) {}
 
   navigateTo(url: string) {
     this.menuCtrl.close(this.contentId).then(() => {
       window.location.href = url;
     });
+  }
+
+  async cerrarSesion() {
+    await this.authStateService.logOut();
   }
 }

@@ -15,7 +15,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [BrowserModule, IonicModule.forRoot({menuType: 'overlay'}), AppRoutingModule,],
+  imports: [BrowserModule, IonicModule.forRoot({menuType: 'overlay'}), AppRoutingModule,IonicModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },provideFirebaseApp(() => initializeApp({ projectId: "agromanager-e2ec7", appId: "1:904391927976:web:5902175d6e878a0a71ba9d", storageBucket: "agromanager-e2ec7.firebasestorage.app", apiKey: "AIzaSyA6bU_OuTFQ4zYmEtAWppggYVdo_W7on78", authDomain: "agromanager-e2ec7.firebaseapp.com", messagingSenderId: "904391927976", measurementId: "G-MPZY5LHBS3" })), provideAuth(() => getAuth()), provideFirestore(() => getFirestore())],
   bootstrap: [AppComponent],
 })

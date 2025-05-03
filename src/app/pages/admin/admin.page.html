@@ -17,11 +17,32 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-card *ngFor="let usuario of listaUsuarios">
-      <ion-card-header>
-        <ion-card-title>{{usuario.correo}}</ion-card-title>
-        <ion-card-subtitle>Nº Parcelas: {{usuario.numeroP}}</ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
+    @if (listaUsuarios.length>0) {
+      <ion-card *ngFor="let usuario of listaUsuarios">
+        <ion-card-header>
+          <ion-card-title>{{usuario.correo}}</ion-card-title>
+          <ion-card-subtitle>Nº Parcelas: {{usuario.numeroP}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-button color="primary" shape="round" (click)="irListaPartcelas(usuario.uid)">Ver lista de parcelas</ion-button>
+          <ion-button color="danger" shape="round">Eliminar todas las parcelas</ion-button>
+        </ion-card-content>
+      </ion-card>
+    }
+    @else {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>No hay usuarios con parcelas</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-text color="danger">
+            <p>Actualmente no hay usuarios registrados que tengan parcelas asignadas.</p>
+          </ion-text>
+          <ion-button color="warning"  shape="round" (click)="irHome()">
+            Volver al inicio
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+    }
   </ion-content>
 </div>

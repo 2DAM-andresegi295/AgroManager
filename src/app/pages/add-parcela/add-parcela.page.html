@@ -17,6 +17,15 @@
     </ion-toolbar>
   </ion-header>
   <ion-content>
+    <h1>Datos de la parcela</h1>
+    <ion-label>Nombre de la parcela: </ion-label>
+    <ion-input [(ngModel)]="nombreParcela" type="text"></ion-input>
+    <ion-label>Típo de esplotación: </ion-label>
+    <ion-select [(ngModel)]="tipoExplotacion" placeholder="Elige..." interface="popover">
+      <ion-select-option value="agricola">Agrícola</ion-select-option>
+      <ion-select-option value="ganadera">Ganadera</ion-select-option>
+    </ion-select>
+
     <div class="form-add" *ngFor="let vertice of vertices; let i=index">
       <!-- Botón que solo aparece en el último vértice -->
       <div *ngIf="i+1==vertices.length;else noUltimo">
@@ -26,24 +35,21 @@
           <ion-input [value]="ultimoClick.lat"></ion-input>
           <ion-label>Altitud: </ion-label>
           <ion-input [value]="ultimoClick.lng"></ion-input>
-          <ion-button
-            (click)="agregarVertice()"
-            expand="full"
-            color="primary"
-          >
+          <ion-button (click)="agregarVertice()" expand="full" color="primary">
             <ion-icon name="add" slot="start"></ion-icon>
             Añadir
           </ion-button>
           <div *ngIf="i>2">
             <ion-button
-            (click)="crearParcela()"
-            expand="full"
-            color="success"
-            style="white-space: nowrap;"
-          >
-            <ion-icon name="create" slot="start"></ion-icon>
-            Crear parcela
-          </ion-button>
+              (click)="crearParcela()"
+              expand="full"
+              color="success"
+              style="white-space: nowrap"
+              [disabled]="!nombreParcela || !tipoExplotacion"
+            >
+              <ion-icon name="create" slot="start"></ion-icon>
+              Crear parcela
+            </ion-button>
           </div>
         </div>
       </div>

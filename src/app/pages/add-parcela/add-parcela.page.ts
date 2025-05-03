@@ -17,6 +17,9 @@ export class AddParcelaPage implements OnInit {
   primero: boolean = false;
   ultimoClick: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
 
+  nombreParcela: any;
+  tipoExplotacion: any;
+
   constructor(
     private cdRef: ChangeDetectorRef,
     private parcelasService: ParcelasService,
@@ -31,18 +34,15 @@ export class AddParcelaPage implements OnInit {
   }
 
   agregarVertice() {
-    this.cdRef.detectChanges();
-    if(!this.primero){
-      this.primero=true
-      this.vertices[0]=this.ultimoClick;
+    if (!this.primero) {
+      this.primero = true;
+      this.vertices[0] = this.ultimoClick;
       this.vertices.push({ lat: 0, lng: 0 });
-    }else{
-      this.vertices[this.vertices.length-1]=this.ultimoClick;
+    } else {
+      this.vertices[this.vertices.length - 1] = this.ultimoClick;
       this.vertices.push({ lat: 0, lng: 0 });
     }
     console.log(this.vertices);
-
-
 
     this.cdRef.detectChanges();
     this.mapadd?.guardarMarcador();
@@ -51,11 +51,11 @@ export class AddParcelaPage implements OnInit {
   }
   async crearParcela() {
     try {
-      this.vertices[this.vertices.length-1]=this.vertices[0];
+      this.vertices[this.vertices.length - 1] = this.vertices[0];
 
       // Espera a que el usuario esté cargado
       const usuario = await new Promise<User | null>((resolve) => {
-        const sub = this.authService.usuario$.subscribe(user => {
+        const sub = this.authService.usuario$.subscribe((user) => {
           if (user) {
             resolve(user);
             sub.unsubscribe();
@@ -68,17 +68,15 @@ export class AddParcelaPage implements OnInit {
       }
 
       await this.parcelasService.addParcela({
-        name: 'prueba',
+        name: this.nombreParcela,
         idUsuario: usuario.uid,
         correo: usuario.email,
         vertices: this.vertices,
-        tipoExplotacion: 'prueba',
+        tipoExplotacion: this.tipoExplotacion,
       });
-
       location.reload();
     } catch (error) {
       console.error(error);
     }
   }
-
 }

@@ -38,6 +38,10 @@
 
 //------------------------------  Estilos pagina Parcela ----------------------------------------------------------------------------
 app-add-parcela{
+  .map{
+    width: 90%;
+    height: 70% !important;
+  }
   .mapa{
     width: 100%;
     height: 100%;
@@ -71,3 +75,10 @@ app-add-parcela{
 ion-input {
   border-radius: 3;
 }
+app-lista-parcelas{
+  .mapa {
+    height: 300px;
+    width: 100%;
+  }
+}
+

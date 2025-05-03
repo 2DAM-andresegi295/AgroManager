@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Parcela from 'src/app/interfaces/parcela.interface';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
+import { Router  } from '@angular/router';
 
 @Component({
   selector: 'app-admin',
@@ -9,41 +10,45 @@ import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
   standalone: false,
 })
 export class AdminPage implements OnInit {
-
   parcelas: any[] = [];
   listaUsuarios: {
     correo: any;
     numeroP: number;
+    uid: string
   }[] = [];
 
-  constructor(private parcelasServices:ParcelasService) {
-
-  }
+  constructor(
+    private parcelasServices: ParcelasService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
-    this.parcelas= await this.parcelasServices.getTodasLasParcelas();
+    this.parcelas = await this.parcelasServices.getTodasLasParcelas();
     this.cargarUsuarios();
   }
 
   cargarUsuarios() {
     this.parcelas.forEach((parcela) => {
-        // Busca si el usuario ya existe en listaUsuarios
-        const usuarioExistente = this.listaUsuarios.find(
-            (usuario) => usuario.correo === parcela.correo
-        );
+      const usuarioExistente = this.listaUsuarios.find(
+        (usuario) => usuario.correo === parcela.correo
+      );
 
-        if (usuarioExistente) {
-            // Si existe, suma 1 a su numeroP
-            usuarioExistente.numeroP += 1;
-        } else {
-            // Si no existe, agrégalo con numeroP = 1 (o parcela.numeroP si lo tienes)
-            this.listaUsuarios.push({
-                correo: parcela.correo,
-                numeroP: 1, // O usa parcela.numeroP si necesitas otro valor inicial
-            });
-        }
+      if (usuarioExistente) {
+        usuarioExistente.numeroP += 1;
+      } else {
+        this.listaUsuarios.push({
+          correo: parcela.correo,
+          numeroP: 1,
+          uid: parcela.idUsuario
+        });
+      }
     });
-}
-}
+  }
+  irListaPartcelas(uid: string) {
+    this.router.navigate(['admin', 'parcelas', uid]);
+  }
 
-
+  irHome(){
+    this.router.navigate(['home']);
+  }
+}

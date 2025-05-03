@@ -4,7 +4,6 @@ import { ParcelasService } from './../../services/parcelas/parcelas.service';
 import { Component, OnInit, ViewChild, ElementRef, Output, EventEmitter, Input } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Loader } from '@googlemaps/js-api-loader';
-import { IonContent, IonButton, IonCard, IonCardContent } from "@ionic/angular/standalone";
 
 @Component({
   selector: 'app-map',
@@ -14,10 +13,10 @@ import { IonContent, IonButton, IonCard, IonCardContent } from "@ionic/angular/s
 })
 export class MapComponent implements OnInit {
   @Input() isAdd:boolean=false;
+  @Input() centroExterno:google.maps.LatLngLiteral|null=null;
+  @Input() parcelaExterna: google.maps.LatLngLiteral[]=[]
   @ViewChild('map', { static: true }) mapElement!: ElementRef;
   @Output() marcadorCreado = new EventEmitter<google.maps.LatLngLiteral>();
-
-
 
   map: google.maps.Map | undefined;
   polygon: google.maps.Polygon | undefined;
@@ -35,17 +34,20 @@ export class MapComponent implements OnInit {
   }
   async ngOnInit() {
     await this.cargarMapa();
+    if(this.parcelaExterna.length>0){
+      this.dibujarParcela(this.parcelaExterna);
+    }else{
+      this.authService.usuario$.subscribe(async user => {
+        if (user) {
+          this.parcelas = await this.parcelasService.getParcelasPorUsuario(user.uid);
+          console.log(this.parcelas);
 
-    this.authService.usuario$.subscribe(async user => {
-      if (user) {
-        this.parcelas = await this.parcelasService.getParcelasPorUsuario(user.uid);
-        console.log(this.parcelas);
-
-        this.parcelas.forEach(parcela => {
-          this.dibujarParcela(parcela.vertices);
-        });
-      }
-    });
+          this.parcelas.forEach(parcela => {
+            this.dibujarParcela(parcela.vertices);
+          });
+        }
+      });
+    }
   }
 
   cargarMapa(): Promise<void> {
@@ -56,12 +58,17 @@ export class MapComponent implements OnInit {
       });
 
       loader.load().then(async () => {
-        const centro = await this.geolocalizacion.getGeolocalizacion();
+        let centro :google.maps.LatLngLiteral;
+        if(this.centroExterno!=null){
+           centro= this.calcularCentroParcela(this.parcelaExterna);
+        }else{
+          centro = await this.geolocalizacion.getGeolocalizacion();
+        }
         console.log(`Centro del mapa: ${centro.lat}, ${centro.lng}`);
 
         this.map = new google.maps.Map(this.mapElement.nativeElement, {
           center: centro,
-          zoom: 17,
+          zoom: 16,
         });
 
         // Inicializa marcador principal si hay posición
@@ -130,6 +137,17 @@ export class MapComponent implements OnInit {
       this.marcadores[0].setPosition(this.ultimoClickLatLng);
       this.primerMarcador=true;
     }
+  }
+  calcularCentroParcela(coords: google.maps.LatLngLiteral[]): google.maps.LatLngLiteral {
+    let lat = 0, lng = 0;
+    coords.forEach(coord => {
+      lat += coord.lat;
+      lng += coord.lng;
+    });
+    return {
+      lat: lat / coords.length,
+      lng: lng / coords.length
+    };
   }
 
 }
