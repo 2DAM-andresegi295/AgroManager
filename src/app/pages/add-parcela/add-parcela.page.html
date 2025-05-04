@@ -32,13 +32,22 @@
         <h1>Vértice {{i+1}}</h1>
         <div class="vertice">
           <ion-label>Latitud: </ion-label>
-          <ion-input [value]="ultimoClick.lat"></ion-input>
+          <ion-input
+          type="number"
+          [(ngModel)]="ultimoClick.lat"
+          (ionInput)="onManualInput($event)"></ion-input>
+
           <ion-label>Altitud: </ion-label>
-          <ion-input [value]="ultimoClick.lng"></ion-input>
+          <ion-input
+          type="number"
+          [(ngModel)]="ultimoClick.lng"
+          (ionInput)="onManualInput($event)"
+          ></ion-input>
           <ion-button (click)="agregarVertice()" expand="full" color="primary">
             <ion-icon name="add" slot="start"></ion-icon>
             Añadir
           </ion-button>
+
           <div *ngIf="i>2">
             <ion-button
               (click)="crearParcela()"

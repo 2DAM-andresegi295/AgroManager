@@ -1,3 +1,4 @@
+import { IonInputCustomEvent, InputInputEventDetail } from '@ionic/core';
 import { AuthService } from './../../services/auth/auth.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'firebase/auth';
@@ -19,6 +20,7 @@ export class AddParcelaPage implements OnInit {
 
   nombreParcela: any;
   tipoExplotacion: any;
+  marcadorManual: boolean = true;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -27,21 +29,39 @@ export class AddParcelaPage implements OnInit {
   ) {}
 
   ngOnInit() {}
-  onMarcadorCreado(vertice: google.maps.LatLngLiteral) {
-    this.ultimoClick = vertice;
 
+  onMarcadorCreado(vertice: google.maps.LatLngLiteral) {
+    this.marcadorManual = false;
+    this.ultimoClick = vertice;
     this.cdRef.detectChanges();
   }
 
   agregarVertice() {
-    if (!this.primero) {
+    if (!this.primero&&!this.marcadorManual) {
       this.primero = true;
       this.vertices[0] = this.ultimoClick;
       this.vertices.push({ lat: 0, lng: 0 });
-    } else {
+    } else if(!this.marcadorManual){
       this.vertices[this.vertices.length - 1] = this.ultimoClick;
       this.vertices.push({ lat: 0, lng: 0 });
     }
+
+    if(!this.primero&&this.marcadorManual){
+      if(this.mapadd){
+        this.primero = true;
+        this.vertices[0] = this.ultimoClick;
+        this.vertices.push({ lat: 0, lng: 0 });
+        console.log(this.vertices[this.vertices.length-1]);
+        this.mapadd.ultimoClickLatLng=this.ultimoClick
+      }
+    }else if(this.marcadorManual){
+      this.vertices[this.vertices.length - 1] = this.ultimoClick;
+      this.vertices.push({ lat: 0, lng: 0 });
+      if(this.mapadd){
+        this.mapadd.ultimoClickLatLng=this.ultimoClick
+      }
+    }
+
     console.log(this.vertices);
 
     this.cdRef.detectChanges();
@@ -78,5 +98,8 @@ export class AddParcelaPage implements OnInit {
     } catch (error) {
       console.error(error);
     }
+  }
+  onManualInput($event: IonInputCustomEvent<InputInputEventDetail>) {
+    this.marcadorManual=true;
   }
 }
