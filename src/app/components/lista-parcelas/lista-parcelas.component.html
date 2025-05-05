@@ -1,22 +1,4 @@
-<app-menu
-  [contentId]="'add-parcela-content'"
-  [title]="'Añadir Parcela'"
-  [items]="[
-    { text: 'Volver', url: '/parcelas' },
-    { text: 'Guardar', url: '/parcelas' }
-  ]"
->
-</app-menu>
-<div class="ion-page" id="add-parcela-content">
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button menu="add-parcela-content"></ion-menu-button>
-      </ion-buttons>
-      <ion-title>Añadir Parcela</ion-title>
-    </ion-toolbar>
-  </ion-header>
-  <ion-content>
+<ion-content>
     <ion-card *ngFor="let parcela of parcelas">
       <ion-card-header>
         <ion-card-title>{{parcela.name}}</ion-card-title>
@@ -31,7 +13,7 @@
           </app-map>
         </div>
         <ion-button color="danger" shape="round" (click)="eliminarParcela(parcela.id)">Eliminar</ion-button>
+        <ion-button color="primary" shape="round" (click)="administrarParcela(parcela.id)">Administrar</ion-button>
       </ion-card-content>
     </ion-card>
   </ion-content>
-</div>

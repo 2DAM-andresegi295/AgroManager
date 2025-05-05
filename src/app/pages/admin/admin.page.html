@@ -1,17 +1,14 @@
 <app-menu
-  [contentId]="'add-parcela-content'"
-  [title]="'Añadir Parcela'"
-  [items]="[
-    { text: 'Volver', url: '/parcelas' },
-    { text: 'Guardar', url: '/parcelas' }
-  ]"
+  [contentId]="'admin'"
+  [title]="'Panel administrador'"
+
 >
 </app-menu>
-<div class="ion-page" id="add-parcela-content">
+<div class="ion-page" id="admin">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-menu-button menu="add-parcela-content"></ion-menu-button>
+        <ion-menu-button menu="admin"></ion-menu-button>
       </ion-buttons>
       <ion-title>Administrador</ion-title>
     </ion-toolbar>

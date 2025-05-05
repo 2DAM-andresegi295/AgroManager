@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminPage } from './admin.page';
 import { ListaParcelasComponent } from 'src/app/components/lista-parcelas/lista-parcelas.component';
+import { ParcelasAdminComponent } from './parcelas-admin/parcelas-admin.component';
 
 const routes: Routes = [
   {
@@ -11,7 +12,7 @@ const routes: Routes = [
   },
   {
     path:'parcelas/:uid',
-    component: ListaParcelasComponent
+    component: ParcelasAdminComponent
   }
 ];
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { IonicModule} from '@ionic/angular';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,24 +13,18 @@ import { ComponentsModule } from '../components.module';
   imports: [CommonModule, IonicModule,ComponentsModule],
 })
 export class ListaParcelasComponent  implements OnInit {
-  parcelas: any[]=[];
-  uid: string="";
+administrarParcela(arg0: any) {
+throw new Error('Method not implemented.');
+}
+  @Input() parcelas: any[]=[];
   @ViewChild('map') map: MapComponent | undefined;
 
   constructor(
     private parcelasService:ParcelasService,
-    private activatedRoute: ActivatedRoute,
-    private route:Router
   ) {}
 
   async ngOnInit() {
-    this.uid = this.activatedRoute.snapshot.paramMap.get('uid') || '';
-    this.parcelas = await this.parcelasService.getParcelasPorUsuario(this.uid);
     console.log(this.parcelas)
-
-    if(this.parcelas.length==0){
-      this.route.navigateByUrl('/admin')
-    }
   }
 
   async eliminarParcela(parcelaId: string){

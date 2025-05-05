@@ -68,7 +68,9 @@ export class MapComponent implements OnInit {
 
         this.map = new google.maps.Map(this.mapElement.nativeElement, {
           center: centro,
-          zoom: 16,
+          zoom: 15,
+          mapTypeId: 'hybrid',
+          disableDefaultUI: true,
         });
 
         // Inicializa marcador principal si hay posición

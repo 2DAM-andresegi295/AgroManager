@@ -9,6 +9,7 @@ import { ParcelasPageRoutingModule } from './parcelas-routing.module';
 import { ParcelasPage } from './parcelas.page';
 import { ComponentsModule } from "../../components/components.module";
 import { MapComponent } from "../../components/map/map.component";
+import { ListaParcelasComponent } from "../../components/lista-parcelas/lista-parcelas.component";
 
 @NgModule({
   imports: [
@@ -16,7 +17,9 @@ import { MapComponent } from "../../components/map/map.component";
     FormsModule,
     IonicModule,
     ParcelasPageRoutingModule,
-    ComponentsModule,],
+    ComponentsModule,
+    ListaParcelasComponent
+],
   declarations: [ParcelasPage]
 })
 export class ParcelasPageModule {}
