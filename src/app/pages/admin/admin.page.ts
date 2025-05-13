@@ -10,6 +10,7 @@ import { Router  } from '@angular/router';
   standalone: false,
 })
 export class AdminPage implements OnInit {
+
   parcelas: any[] = [];
   listaUsuarios: {
     correo: any;
@@ -50,5 +51,8 @@ export class AdminPage implements OnInit {
 
   irHome(){
     this.router.navigate(['home']);
+  }
+  eliminarTodasLasParcelas(uid: string) {
+
   }
 }

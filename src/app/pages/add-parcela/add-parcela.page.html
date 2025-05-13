@@ -3,7 +3,6 @@
   [title]="'Añadir Parcela'"
   [items]="[
     { text: 'Volver', url: '/parcelas' },
-    { text: 'Guardar', url: '/parcelas' }
   ]"
 ></app-menu>
 
@@ -39,66 +38,6 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card *ngFor="let vertice of vertices; let i = index">
-      <ion-card-header>
-        <ion-card-title>Vértice {{ i + 1 }}</ion-card-title>
-      </ion-card-header>
-
-      <ion-card-content>
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <ion-item>
-                <ion-label position="stacked">Latitud</ion-label>
-                <ion-input
-                  *ngIf="i + 1 == vertices.length; else soloLecturaLat"
-                  type="number"
-                  [(ngModel)]="ultimoClick.lat"
-                  (ionInput)="onManualInput($event)">
-                </ion-input>
-                <ng-template #soloLecturaLat>
-                  <ion-input [value]="vertices[i].lat" readonly></ion-input>
-                </ng-template>
-              </ion-item>
-            </ion-col>
-
-            <ion-col size="6">
-              <ion-item>
-                <ion-label position="stacked">Altitud</ion-label>
-                <ion-input
-                  *ngIf="i + 1 == vertices.length; else soloLecturaLng"
-                  type="number"
-                  [(ngModel)]="ultimoClick.lng"
-                  (ionInput)="onManualInput($event)">
-                </ion-input>
-                <ng-template #soloLecturaLng>
-                  <ion-input [value]="vertices[i].lng" readonly></ion-input>
-                </ng-template>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-        <div *ngIf="i + 1 == vertices.length" class="ion-padding-top">
-          <ion-button expand="block" color="primary" (click)="agregarVertice()">
-            <ion-icon name="add" slot="start"></ion-icon>
-            Añadir
-          </ion-button>
-
-          <ion-button
-            expand="block"
-            color="success"
-            [disabled]="!nombreParcela || !tipoExplotacion"
-            (click)="crearParcela()"
-            *ngIf="i > 2"
-          >
-            <ion-icon name="create" slot="start"></ion-icon>
-            Crear parcela
-          </ion-button>
-        </div>
-      </ion-card-content>
-    </ion-card>
-
     <ion-card>
       <ion-card-header>
         <ion-card-title>Ubicación en el Mapa</ion-card-title>
@@ -111,6 +50,67 @@
         </app-map>
       </ion-card-content>
     </ion-card>
+
+    <ion-card *ngFor="let vertice of verticesReverso; let i = index">
+      <ion-card-header>
+        <ion-card-title>Vértice {{ vertices.length - i }}</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="stacked">Latitud</ion-label>
+                <ion-input
+                  *ngIf="i == 0; else soloLecturaLat"
+                  type="number"
+                  [(ngModel)]="ultimoClick.lat"
+                  (ionInput)="onManualInput($event)">
+                </ion-input>
+                <ng-template #soloLecturaLat>
+                  <ion-input [value]="vertice.lat" readonly></ion-input>
+                </ng-template>
+              </ion-item>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-item>
+                <ion-label position="stacked">Longitud</ion-label>
+                <ion-input
+                  *ngIf="i == 0; else soloLecturaLng"
+                  type="number"
+                  [(ngModel)]="ultimoClick.lng"
+                  (ionInput)="onManualInput($event)">
+                </ion-input>
+                <ng-template #soloLecturaLng>
+                  <ion-input [value]="vertice.lng" readonly></ion-input>
+                </ng-template>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <div *ngIf="i == 0" class="ion-padding-top">
+          <ion-button expand="block" color="primary" (click)="agregarVertice()">
+            <ion-icon name="add" slot="start"></ion-icon>
+            Añadir
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            color="success"
+            [disabled]="!nombreParcela || !tipoExplotacion"
+            (click)="crearParcela()"
+            *ngIf="vertices.length > 3"
+          >
+            <ion-icon name="create" slot="start"></ion-icon>
+            Crear parcela
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
 
   </ion-content>
 </div>

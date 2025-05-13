@@ -102,4 +102,7 @@ export class AddParcelaPage implements OnInit {
   onManualInput($event: IonInputCustomEvent<InputInputEventDetail>) {
     this.marcadorManual=true;
   }
+  get verticesReverso() {
+    return [...this.vertices].reverse();
+  }
 }

@@ -14,8 +14,14 @@ export class AuthStateService{
     return authState(this._auth)
   }
 
-  logOut(){
-    this._router.navigateByUrl('/home');
-    return signOut(this._auth);
+  async logOut() {
+    try {
+      await signOut(this._auth);
+      localStorage.clear();
+      sessionStorage.clear();
+      this._router.navigateByUrl('/home');
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
   }
 }

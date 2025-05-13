@@ -13,14 +13,12 @@ import { ComponentsModule } from '../components.module';
   imports: [CommonModule, IonicModule,ComponentsModule],
 })
 export class ListaParcelasComponent  implements OnInit {
-administrarParcela(arg0: any) {
-throw new Error('Method not implemented.');
-}
   @Input() parcelas: any[]=[];
   @ViewChild('map') map: MapComponent | undefined;
 
   constructor(
     private parcelasService:ParcelasService,
+    private router: Router
   ) {}
 
   async ngOnInit() {
@@ -30,6 +28,12 @@ throw new Error('Method not implemented.');
   async eliminarParcela(parcelaId: string){
     await this.parcelasService.deleteParcela(parcelaId);
     location.reload();
+  }
+
+  administrarParcela(parcela: any){
+    this.router.navigate(['parcelas/administracion-parcelas',parcela.id], {
+      state: { parcela }  // Envía el objeto completo en el estado
+    });
   }
 
 }
