@@ -1,9 +1,7 @@
 <app-menu
   [contentId]="'add-parcela-content'"
   [title]="'Añadir Parcela'"
-  [items]="[
-    { text: 'Volver', url: '/parcelas' },
-  ]"
+  [items]="[{ text: 'Volver', url: '/parcelas' }]"
 ></app-menu>
 
 <div class="ion-page" id="add-parcela-content">
@@ -17,7 +15,7 @@
   </ion-header>
 
   <ion-content class="ion-padding">
-
+    <!-- Datos de la Parcela -->
     <ion-card>
       <ion-card-header>
         <ion-card-title>Datos de la Parcela</ion-card-title>
@@ -35,55 +33,194 @@
             <ion-select-option value="ganadera">Ganadera</ion-select-option>
           </ion-select>
         </ion-item>
+
+        <!-- Explotación Ganadera -->
+        <ng-container *ngIf="tipoExplotacion === 'ganadera'">
+          <ion-item>
+            <ion-label position="stacked">Especie</ion-label>
+            <ion-input [(ngModel)]="especie" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Cabezas de ganado</ion-label>
+            <ion-input [(ngModel)]="cabezasGanado" type="number"></ion-input>
+          </ion-item>
+
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Hidrataciones/semana</ion-label>
+                  <ion-input [(ngModel)]="hidratacionSemana" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Litros por vez</ion-label>
+                  <ion-input [(ngModel)]="litrosPorVez" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Precio por litro</ion-label>
+                  <ion-input [(ngModel)]="precioLitro" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Alimentaciones/semana</ion-label>
+                  <ion-input [(ngModel)]="alimentacionSemana" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Kg por vez</ion-label>
+                  <ion-input [(ngModel)]="kilosPorVez" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Precio por kg</ion-label>
+                  <ion-input [(ngModel)]="precioKilo" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Desparasitaciones/año</ion-label>
+                  <ion-input [(ngModel)]="frecuenciaDesaparasitacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Precio desparasitación</ion-label>
+                  <ion-input [(ngModel)]="precioDesparasitacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Supervisión vet./año</ion-label>
+                  <ion-input [(ngModel)]="frecuenciaVeterinario" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Precio supervisión</ion-label>
+                  <ion-input [(ngModel)]="precioSupervision" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+
+          <ion-item>
+            <ion-label position="stacked">Finalidad</ion-label>
+            <ion-select [(ngModel)]="finalidad" placeholder="Elige..." interface="popover">
+              <ion-select-option value="sacrificio">Para sacrificio</ion-select-option>
+              <ion-select-option value="produccion_continua">Producción continua</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ng-container>
+
+        <!-- Explotación Agrícola -->
+        <ng-container *ngIf="tipoExplotacion === 'agricola'">
+          <ion-item>
+            <ion-label position="stacked">Especie</ion-label>
+            <ion-input [(ngModel)]="especie" type="text"></ion-input>
+          </ion-item>
+          <ion-grid>
+            <ion-row>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Riegos/semana</ion-label>
+                  <ion-input [(ngModel)]="frecuenciaRiego" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Litros por vez</ion-label>
+                  <ion-input [(ngModel)]="litrosPorVez" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="4">
+                <ion-item>
+                  <ion-label position="stacked">Precio por litro</ion-label>
+                  <ion-input [(ngModel)]="precioLitro" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Desparasitaciones/año</ion-label>
+                  <ion-input [(ngModel)]="frecuenciaDesaparasitacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Precio desparasitación</ion-label>
+                  <ion-input [(ngModel)]="precioDesparasitacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Fertilizaciones/año</ion-label>
+                  <ion-input [(ngModel)]="frecuenciaDfertilizacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+              <ion-col size="6">
+                <ion-item>
+                  <ion-label position="stacked">Precio fertilización</ion-label>
+                  <ion-input [(ngModel)]="precioFertilizacion" type="number"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+          <ion-item>
+            <ion-label position="stacked">Fecha recolección</ion-label>
+            <ion-datetime presentation="date" [(ngModel)]="fechaRecoleccion" display-format="DD/MM/YYYY"></ion-datetime>
+          </ion-item>
+        </ng-container>
       </ion-card-content>
     </ion-card>
 
+    <!-- Mapa -->
     <ion-card>
       <ion-card-header>
         <ion-card-title>Ubicación en el Mapa</ion-card-title>
       </ion-card-header>
       <ion-card-content class="mapa">
-        <app-map
-          #mapadd
-          [isAdd]="true"
-          (marcadorCreado)="onMarcadorCreado($event)">
-        </app-map>
+        <app-map #mapadd [isAdd]="true" (marcadorCreado)="onMarcadorCreado($event)"></app-map>
       </ion-card-content>
     </ion-card>
 
+    <!-- Coordenadas de Vértices -->
     <ion-card *ngFor="let vertice of verticesReverso; let i = index">
       <ion-card-header>
         <ion-card-title>Vértice {{ vertices.length - i }}</ion-card-title>
       </ion-card-header>
-
       <ion-card-content>
         <ion-grid>
           <ion-row>
             <ion-col size="6">
               <ion-item>
                 <ion-label position="stacked">Latitud</ion-label>
-                <ion-input
-                  *ngIf="i == 0; else soloLecturaLat"
-                  type="number"
-                  [(ngModel)]="ultimoClick.lat"
-                  (ionInput)="onManualInput($event)">
-                </ion-input>
-                <ng-template #soloLecturaLat>
+                <ion-input *ngIf="i === 0; else readonlyLat" type="number" [(ngModel)]="ultimoClick.lat" (ionInput)="onManualInput($event)"></ion-input>
+                <ng-template #readonlyLat>
                   <ion-input [value]="vertice.lat" readonly></ion-input>
                 </ng-template>
               </ion-item>
             </ion-col>
-
             <ion-col size="6">
               <ion-item>
                 <ion-label position="stacked">Longitud</ion-label>
-                <ion-input
-                  *ngIf="i == 0; else soloLecturaLng"
-                  type="number"
-                  [(ngModel)]="ultimoClick.lng"
-                  (ionInput)="onManualInput($event)">
-                </ion-input>
-                <ng-template #soloLecturaLng>
+                <ion-input *ngIf="i === 0; else readonlyLng" type="number" [(ngModel)]="ultimoClick.lng" (ionInput)="onManualInput($event)"></ion-input>
+                <ng-template #readonlyLng>
                   <ion-input [value]="vertice.lng" readonly></ion-input>
                 </ng-template>
               </ion-item>
@@ -91,26 +228,18 @@
           </ion-row>
         </ion-grid>
 
-        <div *ngIf="i == 0" class="ion-padding-top">
+        <div *ngIf="i === 0" class="ion-padding-top">
           <ion-button expand="block" color="primary" (click)="agregarVertice()">
             <ion-icon name="add" slot="start"></ion-icon>
             Añadir
           </ion-button>
 
-          <ion-button
-            expand="block"
-            color="success"
-            [disabled]="!nombreParcela || !tipoExplotacion"
-            (click)="crearParcela()"
-            *ngIf="vertices.length > 3"
-          >
+          <ion-button expand="block" color="success" [disabled]="!nombreParcela || !tipoExplotacion" (click)="crearParcela()" *ngIf="vertices.length > 3">
             <ion-icon name="create" slot="start"></ion-icon>
             Crear parcela
           </ion-button>
         </div>
       </ion-card-content>
     </ion-card>
-
-
   </ion-content>
 </div>

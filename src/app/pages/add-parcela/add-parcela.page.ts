@@ -19,8 +19,25 @@ export class AddParcelaPage implements OnInit {
   ultimoClick: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
 
   nombreParcela: any;
-  tipoExplotacion: any;
+  tipoExplotacion: any=null;
   marcadorManual: boolean = true;
+especie: any;
+cabezasGanado: any;
+hidratacionSemana: any;
+litrosPorVez: any;
+alimentacionSemana: any;
+precioKilo: any;
+precioSupervision: any;
+frecuenciaVeterinario: any;
+frecuenciaDesaparasitacion: any;
+precioDesparasitacion: any;
+finalidad: any;
+frecuenciaRiego: any;
+precioLitro: any;
+frecuenciaDfertilizacion: any;
+precioFertilizacion: any;
+fechaRecoleccion: any;
+kilosPorVez: any;
 
   constructor(
     private cdRef: ChangeDetectorRef,
