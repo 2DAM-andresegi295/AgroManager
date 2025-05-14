@@ -19,7 +19,7 @@ import { AuthService } from '../auth/auth.service';
 export class ParcelasService {
   constructor(private firestore: Firestore, private authService: AuthService) {}
 
-  async addParcela(parcela: Parcela) {
+  async addParcela(parcela: any) {
     const usuario = await new Promise<User | null>((resolve) => {
       const sub = this.authService.usuario$.subscribe((user) => {
         if (user) {
