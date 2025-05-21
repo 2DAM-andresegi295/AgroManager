@@ -31,8 +31,8 @@ export class ListaParcelasComponent  implements OnInit {
   }
 
   administrarParcela(parcela: any){
-    this.router.navigate(['parcelas/administracion-parcelas',parcela.id], {
-      state: { parcela }  // Envía el objeto completo en el estado
+    this.router.navigate(['parcelas/administrar',parcela.id], {
+      state: { parcela }
     });
   }
 

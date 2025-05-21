@@ -6,6 +6,7 @@ import { MapComponent } from 'src/app/components/map/map.component';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { firstValueFrom } from 'rxjs';
 
+
 @Component({
   selector: 'app-add-parcela',
   templateUrl: './add-parcela.page.html',
@@ -19,26 +20,26 @@ export class AddParcelaPage implements OnInit {
   primero: boolean = false;
   ultimoClick: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
 
-  nombreParcela: any= null;
+  nombreParcela: any = null;
   tipoExplotacion: any = null;
   marcadorManual: boolean = true;
-  especie: any= null;
-  cabezasGanado: any= null;
-  hidratacionSemana: any= null;
-  litrosPorVez: any= null;
-  alimentacionSemana: any= null;
-  precioKilo: any= null;
-  precioSupervision: any= null;
-  frecuenciaVeterinario: any= null;
-  frecuenciaDesaparasitacion: any= null;
-  precioDesparasitacion: any= null;
-  finalidad: any= null;
-  frecuenciaRiego: any= null;
-  precioLitro: any= null;
-  frecuenciaDfertilizacion: any= null;
-  precioFertilizacion: any= null;
-  fechaRecoleccion: any= null;
-  kilosPorVez: any= null;
+  especie: any = null;
+  cabezasGanado: any = null;
+  hidratacionSemana: any = null;
+  litrosPorVez: any = null;
+  alimentacionSemana: any = null;
+  precioKilo: any = null;
+  precioSupervision: any = null;
+  frecuenciaVeterinario: any = null;
+  frecuenciaDesaparasitacion: any = null;
+  precioDesparasitacion: any = null;
+  finalidad: any = null;
+  frecuenciaRiego: any = null;
+  precioLitro: any = null;
+  frecuenciaDfertilizacion: any = null;
+  precioFertilizacion: any = null;
+  fechaRecoleccion: any = null;
+  kilosPorVez: any = null;
 
   constructor(
     private cdRef: ChangeDetectorRef,
@@ -106,15 +107,57 @@ export class AddParcelaPage implements OnInit {
           tipoExplotacion: this.tipoExplotacion,
           especie: this.especie,
           cabezasGanado: this.cabezasGanado,
-          hidratacion:{
-            hidratacionSemana:this.hidratacionSemana,
-            litrosPorVez:this.litrosPorVez,
-            precioLitro:this.precioLitro
+          finalidad: this.finalidad,
+          fecha_sacrificio: this.fechaRecoleccion,
+          gastosFijos: {
+            hidratacion: {
+              veces_semana: this.hidratacionSemana,
+              litrosPorVez: this.litrosPorVez,
+              precio_litro: this.precioLitro,
+            },
+            alimentacion: {
+              veces_semana: this.alimentacionSemana,
+              kilosPorVez: this.kilosPorVez,
+              precio_kilo: this.precioKilo,
+            },
+            desparasitacion: {
+              veces_ano: this.frecuenciaDesaparasitacion,
+              precio_vez: this.precioDesparasitacion,
+            },
+            veterinario: {
+              veces_ano: this.frecuenciaVeterinario,
+              precio_vez: this.precioSupervision,
+            },
           },
-          alimentacion:{
-            alimentacionSemana: this.alimentacionSemana,
-            kilosPorVez: this.kilosPorVez
-          }
+        });
+      } else if (this.tipoExplotacion === 'agricola') {
+        await this.parcelasService.addParcela({
+          name: this.nombreParcela,
+          idUsuario: usuario.uid,
+          correo: usuario.email,
+          vertices: this.vertices,
+          tipoExplotacion: this.tipoExplotacion,
+          especie: this.especie,
+          fecha_recoleccion: this.fechaRecoleccion,
+          gastosFijos: {
+            riego: {
+              veces_semana: this.frecuenciaRiego,
+              litrosPorVez: this.litrosPorVez,
+              precio_litro: this.precioLitro,
+            },
+            fertilizacion: {
+              veces_ano: this.frecuenciaDfertilizacion,
+              precio_vez: this.precioFertilizacion,
+            },
+            desparasitacion: {
+              veces_ano: this.frecuenciaDesaparasitacion,
+              precio_vez: this.precioDesparasitacion,
+            },
+            veterinario: {
+              veces_ano: this.frecuenciaVeterinario,
+              precio_vez: this.precioSupervision,
+            },
+          },
         });
       }
 
@@ -128,5 +171,12 @@ export class AddParcelaPage implements OnInit {
   }
   get verticesReverso() {
     return [...this.vertices].reverse();
+  }
+  sePuedeAnadir():boolean{
+    let resultado=false;
+    if(this.nombreParcela&&this.tipoExplotacion&&this.especie&&(true)){
+
+    }
+    return resultado;
   }
 }

@@ -1,3 +1,87 @@
-<p>
-  administrador-parcelas works!
-</p>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/parcelas"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalle de Parcela</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showActions()">
+        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ng-container *ngIf="loading; else content">
+    <div class="loading-container">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando parcela...</p>
+    </div>
+  </ng-container>
+
+  <ng-template #content>
+    <ng-container *ngIf="error; else parcelaData">
+      <ion-card>
+        <ion-card-content class="error-content">
+          <ion-icon name="warning-outline"></ion-icon>
+          <p>{{ error }}</p>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+
+    <ng-template #parcelaData>
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ parcela.name }}</ion-card-title>
+          <ion-card-subtitle>
+            {{ getTipoDisplay(parcela.tipoExplotacion) }}
+          </ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <!-- Información básica -->
+          <ion-list>
+            <ion-item *ngFor="let field of ['especie', 'cabezasGanado', 'finalidad', 'fecha_sacrificio', 'fecha_recoleccion']">
+              <ion-label *ngIf="parcela[field] !== undefined">
+                <h3>{{ fieldLabels[field] || field }}</h3>
+                <p *ngIf="field === 'finalidad'">{{ getFinalidadDisplay(parcela[field]) }}</p>
+                <p *ngIf="field === 'fecha_sacrificio' || field === 'fecha_recoleccion'">{{ formatDate(parcela[field]) }}</p>
+                <p *ngIf="field !== 'finalidad' && field !== 'fecha_sacrificio' && field !== 'fecha_recoleccion'">{{ parcela[field] }}</p>
+              </ion-label>
+            </ion-item>
+          </ion-list>
+
+          <!-- Gastos Fijos -->
+          <ion-accordion-group *ngIf="parcela.gastosFijos">
+            <ion-accordion *ngFor="let gasto of displayGastosFijos(parcela.gastosFijos)">
+              <ion-item slot="header">
+                <ion-label>{{ gasto.label }}</ion-label>
+              </ion-item>
+              <div slot="content">
+                <ion-list>
+                  <ion-item *ngFor="let item of objectToArray(gasto.value)">
+                    <ion-label>{{ formatLabel(item.key) }}</ion-label>
+                    <ion-note slot="end">{{ item.value }}</ion-note>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Botón para ver en mapa -->
+      <ion-button expand="block" fill="outline" (click)="showMap()">
+        <ion-icon slot="start" name="map-outline"></ion-icon>
+        Ver en Mapa
+      </ion-button>
+
+      <!-- Botón de acción principal -->
+      <ion-button expand="block" (click)="calculateCosts()" *ngIf="parcela.tipoExplotacion">
+        <ion-icon slot="start" name="calculator-outline"></ion-icon>
+        Calcular Costos {{ parcela.tipoExplotacion === 'ganadera' ? 'Anuales' : 'Por Cosecha' }}
+      </ion-button>
+    </ng-template>
+  </ng-template>
+</ion-content>

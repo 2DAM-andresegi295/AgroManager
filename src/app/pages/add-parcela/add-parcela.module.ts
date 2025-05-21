@@ -8,7 +8,7 @@ import { AddParcelaPageRoutingModule } from './add-parcela-routing.module';
 
 import { AddParcelaPage } from './add-parcela.page';
 import { ComponentsModule } from "../../components/components.module";
-import { MapComponent } from "../../components/map/map.component";
+
 
 @NgModule({
   imports: [
