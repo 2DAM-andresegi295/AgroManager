@@ -5,12 +5,13 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
+  updateDoc,
   where,
 } from 'firebase/firestore';
-import Parcela from 'src/app/interfaces/parcela.interface';
-import { Auth, User } from '@angular/fire/auth';
+import { User } from '@angular/fire/auth';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -62,6 +63,7 @@ export class ParcelasService {
       return parcelas;
     }
   }
+
   async getTodasLasParcelas() {
     const usuario = await new Promise<User | null>((resolve) => {
       const sub = this.authService.usuario$.subscribe((user) => {
@@ -114,6 +116,29 @@ export class ParcelasService {
       );
 
       return Promise.all(deletePromises);
+    }
+  }
+
+  async getParcelaById(id: string) {
+    const docRef = doc(this.firestore, `parcelas/${id}`); // Cambia "parcelas" por tu colección
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      console.log('Documento:', data);
+      return data;
+    } else {
+      console.log('No existe el documento');
+      return null;
+    }
+  }
+  async actualizarParcela(id: string, datos: any): Promise<void> {
+    const docRef = doc(this.firestore, `parcelas/${id}`);
+    try {
+      await updateDoc(docRef, datos);
+      console.log('Documento actualizado correctamente');
+    } catch (error) {
+      console.error('Error al actualizar el documento:', error);
     }
   }
 }

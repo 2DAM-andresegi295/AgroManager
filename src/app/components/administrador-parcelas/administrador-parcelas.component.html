@@ -1,87 +1,393 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/parcelas"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Detalle de Parcela</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="showActions()">
-        <ion-icon slot="icon-only" name="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<app-menu
+  [contentId]="'admin-parcela-content'"
+  [title]="'Parcela ' + id"
+  [items]="[{ text: 'Volver', url: '/parcelas' }]"
+></app-menu>
+<div class="ion-page" id="admin-parcela-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button menu="admin-parcela-content"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Parecla {{ id }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-card *ngIf="parcela">
+      <ion-card-header>
+        <ion-card-title>{{ parcela.name }}</ion-card-title>
+        <ion-card-subtitle>{{
+          parcela.tipoExplotacion | titlecase
+        }}</ion-card-subtitle>
+      </ion-card-header>
 
-<ion-content class="ion-padding">
-  <ng-container *ngIf="loading; else content">
-    <div class="loading-container">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p>Cargando parcela...</p>
-    </div>
-  </ng-container>
+      <ion-card-content>
+        <ion-list-header color="light">Datos Generales</ion-list-header>
 
-  <ng-template #content>
-    <ng-container *ngIf="error; else parcelaData">
-      <ion-card>
-        <ion-card-content class="error-content">
-          <ion-icon name="warning-outline"></ion-icon>
-          <p>{{ error }}</p>
-        </ion-card-content>
-      </ion-card>
-    </ng-container>
+        <ion-item>
+          <ion-label position="stacked">Especie</ion-label>
+          <ion-input
+            [(ngModel)]="parcela.especie"
+            [readonly]="!editable"
+          ></ion-input>
+        </ion-item>
 
-    <ng-template #parcelaData>
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ parcela.name }}</ion-card-title>
-          <ion-card-subtitle>
-            {{ getTipoDisplay(parcela.tipoExplotacion) }}
-          </ion-card-subtitle>
-        </ion-card-header>
+        <ng-container *ngIf="parcela.tipoExplotacion === 'agricola'">
+          <ion-list-header color="light">Detalles Agrícolas</ion-list-header>
+          <ion-item>
+            <ion-label position="stacked">Finalidad</ion-label>
+            <ion-select
+              [(ngModel)]="parcela.finalidad"
+              [disabled]="!editable"
+              interface="popover"
+              placeholder="Selecciona finalidad"
+            >
+              <ion-select-option value="perenne "
+                >Perenne </ion-select-option
+              >
+              <ion-select-option value="temporal"
+                >Temporal</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
 
-        <ion-card-content>
-          <!-- Información básica -->
-          <ion-list>
-            <ion-item *ngFor="let field of ['especie', 'cabezasGanado', 'finalidad', 'fecha_sacrificio', 'fecha_recoleccion']">
-              <ion-label *ngIf="parcela[field] !== undefined">
-                <h3>{{ fieldLabels[field] || field }}</h3>
-                <p *ngIf="field === 'finalidad'">{{ getFinalidadDisplay(parcela[field]) }}</p>
-                <p *ngIf="field === 'fecha_sacrificio' || field === 'fecha_recoleccion'">{{ formatDate(parcela[field]) }}</p>
-                <p *ngIf="field !== 'finalidad' && field !== 'fecha_sacrificio' && field !== 'fecha_recoleccion'">{{ parcela[field] }}</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
+          @if (parcela.finalidad=="temporal") {
+          <ion-item>
+            <ion-label position="stacked">Fecha de recoleccion</ion-label>
+            <ion-datetime-button
+              datetime="datetime"
+              style="margin: 10px"
+              [disabled]="!editable"
+            ></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="datetime"
+                  presentation="date"
+                  [(ngModel)]="parcela.fecha_recoleccion"
+                  display-format="DD/MM/YYYY"
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+          }
 
-          <!-- Gastos Fijos -->
-          <ion-accordion-group *ngIf="parcela.gastosFijos">
-            <ion-accordion *ngFor="let gasto of displayGastosFijos(parcela.gastosFijos)">
-              <ion-item slot="header">
-                <ion-label>{{ gasto.label }}</ion-label>
-              </ion-item>
-              <div slot="content">
-                <ion-list>
-                  <ion-item *ngFor="let item of objectToArray(gasto.value)">
-                    <ion-label>{{ formatLabel(item.key) }}</ion-label>
-                    <ion-note slot="end">{{ item.value }}</ion-note>
-                  </ion-item>
-                </ion-list>
+          <ion-list-header color="medium">Fertilización</ion-list-header>
+          <ion-item class="compact-item">
+            <div class="row-container">
+              <div class="input-group">
+                <ion-label position="stacked">Veces/Año</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.fertilizacion.veces_ano"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
               </div>
-            </ion-accordion>
-          </ion-accordion-group>
-        </ion-card-content>
-      </ion-card>
+              <div class="input-group">
+                <ion-label position="stacked">€/Vez</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.fertilizacion.precio_vez"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+            </div>
+          </ion-item>
 
-      <!-- Botón para ver en mapa -->
-      <ion-button expand="block" fill="outline" (click)="showMap()">
-        <ion-icon slot="start" name="map-outline"></ion-icon>
-        Ver en Mapa
-      </ion-button>
+          <ion-list-header color="medium">Riego</ion-list-header>
+          <ion-item class="compact-item">
+            <div class="row-container">
+              <div class="input-group">
+                <ion-label position="stacked">Veces/Sem</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.riego.veces_semana"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">L/Vez</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.riego.litrosPorVez"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">€/Litro</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.riego.precio_litro"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+            </div>
+          </ion-item>
+        </ng-container>
 
-      <!-- Botón de acción principal -->
-      <ion-button expand="block" (click)="calculateCosts()" *ngIf="parcela.tipoExplotacion">
-        <ion-icon slot="start" name="calculator-outline"></ion-icon>
-        Calcular Costos {{ parcela.tipoExplotacion === 'ganadera' ? 'Anuales' : 'Por Cosecha' }}
-      </ion-button>
-    </ng-template>
-  </ng-template>
-</ion-content>
+        <ng-container *ngIf="parcela.tipoExplotacion === 'ganadera'">
+          <ion-list-header color="light">Detalles Ganaderos</ion-list-header>
+
+          <ion-item>
+            <ion-label position="stacked">Finalidad</ion-label>
+            <ion-select
+              [(ngModel)]="parcela.finalidad"
+              [disabled]="!editable"
+              interface="popover"
+              placeholder="Selecciona finalidad"
+            >
+              <ion-select-option value="sacrificio"
+                >Sacrificio</ion-select-option
+              >
+              <ion-select-option value="produccion_continua"
+                >Producción continua</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
+
+          @if (parcela.finalidad==="sacrificio") {
+          <ion-item>
+            <ion-label position="stacked">Fecha de sacrificio</ion-label>
+            <ion-datetime-button
+              datetime="datetime"
+              style="margin: 10px"
+              [disabled]="!editable"
+            ></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="datetime"
+                  presentation="date"
+                  [(ngModel)]="parcela.fecha_sacrificio"
+                  display-format="DD/MM/YYYY"
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+          }
+
+          <ion-item>
+            <ion-label position="stacked">Cabezas ganado</ion-label>
+            <ion-input
+              [(ngModel)]="parcela.cabezasGanado"
+              type="number"
+              [readonly]="!editable"
+            ></ion-input>
+          </ion-item>
+
+          <ion-list-header color="medium">Alimentación</ion-list-header>
+          <ion-item class="compact-item">
+            <div class="row-container">
+              <div class="input-group">
+                <ion-label position="stacked">Veces/Sem</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.alimentacion.veces_semana"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">Kg/Vez</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.alimentacion.kilosPorVez"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">€/Kg</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.alimentacion.precio_kilo"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+            </div>
+          </ion-item>
+
+          <ion-list-header color="medium">Hidratación</ion-list-header>
+          <ion-item class="compact-item">
+            <div class="row-container">
+              <div class="input-group">
+                <ion-label position="stacked">Veces/Sem</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.hidratacion.veces_semana"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">L/Vez</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.hidratacion.litrosPorVez"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">€/Litro</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.hidratacion.precio_litro"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+            </div>
+          </ion-item>
+
+          <ion-list-header color="medium">Veterinario</ion-list-header>
+          <ion-item class="compact-item">
+            <div class="row-container">
+              <div class="input-group">
+                <ion-label position="stacked">Veces/Año</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.veterinario.veces_ano"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+              <div class="input-group">
+                <ion-label position="stacked">€/Vez</ion-label>
+                <ion-input
+                  [(ngModel)]="parcela.gastosFijos.veterinario.precio_vez"
+                  type="number"
+                  [readonly]="!editable"
+                ></ion-input>
+              </div>
+            </div>
+          </ion-item>
+        </ng-container>
+
+        <ion-list-header color="medium">Desparasitación</ion-list-header>
+        <ion-item class="compact-item">
+          <div class="row-container">
+            <div class="input-group">
+              <ion-label position="stacked">Veces/Año</ion-label>
+              <ion-input
+                [(ngModel)]="parcela.gastosFijos.desparasitacion.veces_ano"
+                type="number"
+                [readonly]="!editable"
+              ></ion-input>
+            </div>
+            <div class="input-group">
+              <ion-label position="stacked">€/Vez</ion-label>
+              <ion-input
+                [(ngModel)]="parcela.gastosFijos.desparasitacion.precio_vez"
+                type="number"
+                [readonly]="!editable"
+              ></ion-input>
+            </div>
+          </div>
+        </ion-item>
+        <ion-list
+          *ngIf="parcela.gastosVariables && parcela.gastosVariables.length > 0"
+        >
+          <ion-list-header color="primary"> Gastos Variables </ion-list-header>
+
+          <ion-item
+            *ngFor="let gasto of parcela.gastosVariables; let i = index"
+          >
+            <ion-label>
+              <h2>{{ gasto.tipo || "Sin tipo" }}</h2>
+              <p>Importe: €{{ gasto.importe | number : "1.2-2" }}</p>
+              <p>Fecha: {{ gasto.fecha | date : "dd/MM/yyyy" }}</p>
+            </ion-label>
+            <ion-button
+              fill="clear"
+              color="danger"
+              (click)="eliminarGastoVariable(i)"
+            >
+              <ion-icon slot="icon-only" name="trash"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+
+        <div class="buttons-container">
+          <ion-button
+            expand="block"
+            color="primary"
+            (click)="cambiarModo()"
+            *ngIf="!editable"
+          >
+            Editar
+          </ion-button>
+
+          <ion-button
+            expand="block"
+            color="secondary"
+            (click)="anadirGastosVariables()"
+            *ngIf="!editable"
+          >
+            Añadir gastos variables
+          </ion-button>
+          <ion-button
+            expand="block"
+            color="success"
+            (click)="guardarCambios()"
+            *ngIf="editable"
+          >
+            Guardar
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    <ion-modal
+      [isOpen]="mostrarModalGasto"
+      (didDismiss)="cerrarModal()"
+      [backdropDismiss]="false"
+    >
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Añadir Gasto Variable</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="cerrarModal()">Cerrar</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content class="ion-padding">
+          <ion-item>
+            <ion-label position="stacked">Tipo de gasto</ion-label>
+            <ion-input
+              [(ngModel)]="nuevoGasto.tipo"
+              placeholder="Ej: maquinaria"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Importe (€)</ion-label>
+            <ion-input
+              [(ngModel)]="nuevoGasto.importe"
+              type="number"
+              placeholder="Ej: 200"
+            ></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label position="stacked">Fecha del gasto</ion-label>
+            <ion-datetime-button datetime="gastoFecha"></ion-datetime-button>
+            <ion-modal [keepContentsMounted]="true">
+              <ng-template>
+                <ion-datetime
+                  id="gastoFecha"
+                  presentation="date"
+                  [(ngModel)]="nuevoGasto.fecha"
+                  display-format="DD/MM/YYYY"
+                ></ion-datetime>
+              </ng-template>
+            </ion-modal>
+          </ion-item>
+
+          <ion-button
+            expand="block"
+            color="success"
+            (click)="guardarGastoVariable()"
+          >
+            Guardar gasto
+          </ion-button>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+  </ion-content>
+</div>

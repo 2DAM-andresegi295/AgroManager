@@ -1,36 +1,71 @@
-.loading-container {
+/* Estilos para la disposición compacta */
+.row-container {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.compact-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --min-height: auto;
+  margin-bottom: 16px;
+}
+
+.input-group {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50vh;
-
-  ion-spinner {
-    margin-bottom: 16px;
-  }
+  min-width: 0;
 }
 
-.error-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  color: var(--ion-color-danger);
-
-  ion-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-  }
+.input-group ion-label {
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  margin-bottom: 4px;
 }
 
-ion-accordion-group {
+.input-group ion-input,
+.input-group ion-datetime {
+  width: 100%;
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+/* Estilo para los items normales */
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 16px;
+}
+
+ion-item ion-label[position="stacked"] {
+  margin-bottom: 4px;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+}
+
+ion-item ion-input,
+ion-item ion-datetime {
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  --padding-start: 12px;
+  --padding-end: 12px;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+.buttons-container {
+  margin-top: 24px;
+}
+
+ion-list-header {
+  font-weight: bold;
   margin-top: 16px;
-}
-
-ion-button {
-  margin-top: 16px;
-}
-
-ion-note {
-  font-size: 1rem;
+  margin-bottom: 8px;
 }

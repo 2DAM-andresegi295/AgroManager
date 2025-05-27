@@ -1,7 +1,6 @@
 import { IonInputCustomEvent, InputInputEventDetail } from '@ionic/core';
 import { AuthService } from './../../services/auth/auth.service';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { User } from 'firebase/auth';
 import { MapComponent } from 'src/app/components/map/map.component';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { firstValueFrom } from 'rxjs';
@@ -129,6 +128,7 @@ export class AddParcelaPage implements OnInit {
               precio_vez: this.precioSupervision,
             },
           },
+          gastosVariables:{}
         });
       } else if (this.tipoExplotacion === 'agricola') {
         await this.parcelasService.addParcela({
@@ -139,6 +139,7 @@ export class AddParcelaPage implements OnInit {
           tipoExplotacion: this.tipoExplotacion,
           especie: this.especie,
           fecha_recoleccion: this.fechaRecoleccion,
+          finanalidad:this.finalidad,
           gastosFijos: {
             riego: {
               veces_semana: this.frecuenciaRiego,
@@ -158,6 +159,7 @@ export class AddParcelaPage implements OnInit {
               precio_vez: this.precioSupervision,
             },
           },
+          gastosVariables:{}
         });
       }
 
