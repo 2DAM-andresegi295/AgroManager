@@ -1,0 +1,52 @@
+<app-menu
+  [contentId]="'finanzas-content'"
+  [title]="'Finanzas'"
+  [items]="[{ text: 'Volver', url: '/parcelas' }]"
+>
+</app-menu>
+<div class="ion-page" id="finanzas-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button menu="finanzas-content"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Finanzas</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-segment (ionChange)="cambiarExplotacion($event.detail.value)">
+      <ion-segment-button *ngFor="let expl of datos" [value]="expl">
+        <ion-label>{{ expl.name }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <ion-segment (ionChange)="seleccionarVista($event.detail.value!)">
+      <ion-segment-button value="explotacion">
+        <ion-label>Por Explotación</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="mensual">
+        <ion-label>Variables por Mes</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+
+    <h2>{{ selectedExplotacion?.name }}</h2>
+    <canvas #barChartCanvas></canvas>
+    <div *ngIf="estadisticas">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Estadísticas de la explotación</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <p>Total: €{{ estadisticas.totalGastos | number:'1.2-2' }}</p>
+          <p>Media: €{{ estadisticas.media | number:'1.2-2' }}</p>
+          <p>Mínimo: €{{ estadisticas.min | number:'1.2-2' }}</p>
+          <p>Máximo: €{{ estadisticas.max | number:'1.2-2' }}</p>
+          <p>
+            Desviación estándar: €{{ estadisticas.desviacionEstandar |
+            number:'1.2-2' }}
+          </p>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ion-content>
+</div>

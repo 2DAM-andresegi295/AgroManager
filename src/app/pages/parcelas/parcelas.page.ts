@@ -1,6 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MenuComponent } from 'src/app/components/menu/menu.component';
-import { IonContent } from '@ionic/angular/standalone';
+import { Component, OnInit} from '@angular/core';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { User } from 'firebase/auth';
 import { AuthService } from 'src/app/services/auth/auth.service';
