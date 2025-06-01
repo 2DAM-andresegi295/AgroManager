@@ -42,6 +42,7 @@ export class AuthService {
       throw error;
     }
   }
+
   // Registro con email/password
   async registrar(email: string, password: string): Promise<any> {
     try {
