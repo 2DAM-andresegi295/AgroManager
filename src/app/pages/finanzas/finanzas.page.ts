@@ -79,91 +79,89 @@ export class FinanzasPage implements OnInit, AfterViewInit {
 }
 
   renderChart() {
-    if (!this.selectedExplotacion) return;
+  if (!this.selectedExplotacion) return;
 
-    const labels: string[] = [];
-    const data: number[] = [];
+  const labels: string[] = [];
+  const data: number[] = [];
 
-    const exp = this.selectedExplotacion;
+  const exp = this.selectedExplotacion;
 
-    for (const key in exp.gastosFijos) {
-      const gasto = exp.gastosFijos[key];
-      let total = 0;
-      if (gasto.precio_vez && gasto.veces_ano) {
-        total = gasto.precio_vez * gasto.veces_ano;
-      } else if (gasto.precio_kilo && gasto.kilosPorVez && gasto.veces_semana) {
-        total =
-          (gasto.precio_kilo * gasto.kilosPorVez * gasto.veces_semana * 52) /
-          12;
-      } else if (
-        gasto.precio_litro &&
-        gasto.litrosPorVez &&
-        gasto.veces_semana
-      ) {
-        total =
-          (gasto.precio_litro * gasto.litrosPorVez * gasto.veces_semana * 52) /
-          12;
-      }
-      labels.push(key);
-      data.push(total);
+  let totalFijos = 0;
+
+  for (const key in exp.gastosFijos) {
+    const gasto = exp.gastosFijos[key];
+    let total = 0;
+
+    if (gasto.precio_vez && gasto.veces_ano) {
+      total = +gasto.precio_vez * +gasto.veces_ano;
+    } else if (gasto.precio_kilo && gasto.kilosPorVez && gasto.veces_semana) {
+      total = (+gasto.precio_kilo * +gasto.kilosPorVez * +gasto.veces_semana * 52) / 12;
+    } else if (gasto.precio_litro && gasto.litrosPorVez && gasto.veces_semana) {
+      total = (+gasto.precio_litro * +gasto.litrosPorVez * +gasto.veces_semana * 52) / 12;
     }
 
-    // Gastos variables
-    const variablesArray = Array.isArray(exp.gastosVariables)
-      ? exp.gastosVariables.map((g: any) => g.importe)
-      : [];
-
-    const variablesTotal = variablesArray.reduce(
-      (acc: number, val: number) => acc + val,
-      0
-    );
-    labels.push('Variables');
-    data.push(variablesTotal);
-
-    const backgroundColors = labels.map((label, i) =>
-      label === 'Variables'
-        ? 'rgba(255, 99, 132, 0.6)'
-        : `rgba(${(i * 50) % 255}, ${(i * 80) % 255}, ${(i * 100) % 255}, 0.6)`
-    );
-
-    // Estadísticas de gastos variables
-    this.chart = new Chart(this.barChartCanvas.nativeElement, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [
-          {
-            label: 'Gastos (€)',
-            data,
-            backgroundColor: backgroundColors,
-            borderColor: 'rgba(75, 192, 192, 1)',
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true },
-        },
-      },
-    });
-    const totalGastos = data.reduce((sum, val) => sum + val, 0);
-    const media = totalGastos / data.length;
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const desviacionEstandar = Math.sqrt(
-      data.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / data.length
-    );
-
-    this.estadisticas = {
-      totalGastos,
-      media,
-      max,
-      min,
-      desviacionEstandar,
-    };
+    labels.push(key);
+    data.push(total);
+    totalFijos += total;
   }
+
+  // Gastos variables
+  const variablesArray = Array.isArray(exp.gastosVariables)
+    ? exp.gastosVariables.map((g: any) => g.importe)
+    : [];
+
+  const totalVariables = variablesArray.reduce((acc: number, val: number) => acc + val, 0);
+  labels.push('Variables');
+  data.push(totalVariables);
+
+  const backgroundColors = labels.map((label, i) =>
+    label === 'Variables'
+      ? 'rgba(255, 99, 132, 0.6)'
+      : `rgba(${(i * 50) % 255}, ${(i * 80) % 255}, ${(i * 100) % 255}, 0.6)`
+  );
+
+  this.chart = new Chart(this.barChartCanvas.nativeElement, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        {
+          label: 'Gastos (€)',
+          data,
+          backgroundColor: backgroundColors,
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true },
+      },
+    },
+  });
+
+  // Estadísticas detalladas
+  const totalGastos = totalFijos + totalVariables;
+  const media = data.length > 0 ? totalGastos / data.length : 0;
+  const max = Math.max(...data);
+  const min = Math.min(...data);
+  const desviacionEstandar = Math.sqrt(
+    data.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / data.length
+  );
+
+  this.estadisticas = {
+    totalFijos,
+    totalVariables,
+    totalGastos,
+    media,
+    max,
+    min,
+    desviacionEstandar,
+  };
+}
+
   renderChartVariablesPorMes() {
   const gastosPorMes: { [key: string]: number } = {};
 

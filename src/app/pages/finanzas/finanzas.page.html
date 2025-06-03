@@ -37,13 +37,31 @@
           <ion-card-title>Estadísticas de la explotación</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          <p>Total: €{{ estadisticas.totalGastos | number:'1.2-2' }}</p>
-          <p>Media: €{{ estadisticas.media | number:'1.2-2' }}</p>
-          <p>Mínimo: €{{ estadisticas.min | number:'1.2-2' }}</p>
-          <p>Máximo: €{{ estadisticas.max | number:'1.2-2' }}</p>
           <p>
-            Desviación estándar: €{{ estadisticas.desviacionEstandar |
+            <strong>Gastos fijos:</strong> €{{ estadisticas.totalFijos |
             number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Gastos variables:</strong> €{{ estadisticas.totalVariables |
+            number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Total:</strong> €{{ estadisticas.totalGastos |
+            number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Media por categoría:</strong> €{{ estadisticas.media |
+            number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Mínimo:</strong> €{{ estadisticas.min | number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Máximo:</strong> €{{ estadisticas.max | number:'1.2-2' }}
+          </p>
+          <p>
+            <strong>Desviación estándar:</strong> €{{
+            estadisticas.desviacionEstandar | number:'1.2-2' }}
           </p>
         </ion-card-content>
       </ion-card>
