@@ -31,7 +31,7 @@
 
     <h2>{{ selectedExplotacion?.name }}</h2>
     <canvas #barChartCanvas></canvas>
-    <div *ngIf="estadisticas">
+    <div *ngIf="estadisticas && vistaSeleccionada === 'explotacion'">
       <ion-card>
         <ion-card-header>
           <ion-card-title>Estadísticas de la explotación</ion-card-title>
