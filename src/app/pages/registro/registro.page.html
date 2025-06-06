@@ -1,40 +1,58 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>Regístrate</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="registro-content">
+  <div class="registro-container">
+    <ion-card class="registro-card">
+      <ion-card-content>
+        <form (ngSubmit)="registrar()" #registroForm="ngForm" novalidate>
 
-<ion-content class="ion-padding">
-  <form (ngSubmit)="registrar()" #registroForm="ngForm">
-    <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
-      <ion-input [(ngModel)]="usuario.nombre" name="nombre" required></ion-input>
-    </ion-item>
+          <ion-item [class.ion-invalid]="nombreField.invalid && nombreField.touched">
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input [(ngModel)]="usuario.nombre" name="nombre" required #nombreField="ngModel"></ion-input>
+          </ion-item>
+          <ion-note slot="error" color="danger" *ngIf="nombreField.invalid && nombreField.touched">
+            El nombre es obligatorio.
+          </ion-note>
 
-    <ion-item>
-      <ion-label position="floating">Email</ion-label>
-      <ion-input type="email" [(ngModel)]="usuario.email" name="email" required></ion-input>
-    </ion-item>
+          <ion-item [class.ion-invalid]="emailField.invalid && emailField.touched">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" [(ngModel)]="usuario.email" name="email" required #emailField="ngModel"></ion-input>
+          </ion-item>
+          <ion-note slot="error" color="danger" *ngIf="emailField.invalid && emailField.touched">
+            El correo debe ser válido.
+          </ion-note>
 
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="usuario.password" name="password" required minlength="6"></ion-input>
-    </ion-item>
+          <ion-item [class.ion-invalid]="passwordField.invalid && passwordField.touched">
+            <ion-label position="floating">Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="usuario.password" name="password" required minlength="6" #passwordField="ngModel"></ion-input>
+          </ion-item>
+          <ion-note slot="error" color="danger" *ngIf="passwordField.invalid && passwordField.touched">
+            La contraseña debe tener al menos 6 caracteres.
+          </ion-note>
 
-    <ion-item>
-      <ion-label position="floating">Confirmar Contraseña</ion-label>
-      <ion-input type="password" [(ngModel)]="usuario.confirmPassword" name="confirmPassword" required></ion-input>
-    </ion-item>
+          <ion-item [class.ion-invalid]="confirmPasswordField.invalid && confirmPasswordField.touched || passwordMismatch">
+            <ion-label position="floating">Confirmar Contraseña</ion-label>
+            <ion-input type="password" [(ngModel)]="usuario.confirmPassword" name="confirmPassword" required #confirmPasswordField="ngModel"></ion-input>
+          </ion-item>
+          <ion-note slot="error" color="danger" *ngIf="usuario.password !== usuario.confirmPassword && confirmPasswordField.touched">
+            Las contraseñas no coinciden.
+          </ion-note>
 
-    <ion-button expand="block" type="submit" [disabled]="!registroForm.valid || usuario.password !== usuario.confirmPassword">
-      Registrarse
-    </ion-button>
+          <ion-button
+            expand="block"
+            type="submit"
+            class="ion-margin-top"
+            [disabled]="registroForm.invalid || usuario.password !== usuario.confirmPassword">
+            Registrarse
+          </ion-button>
 
-    <ion-item *ngIf="errorMessage">
-      <ion-text color="danger">{{errorMessage}}</ion-text>
-    </ion-item>
-  </form>
+          <ion-text color="danger" class="ion-text-center ion-margin-top" *ngIf="errorMessage">
+            <p>{{ errorMessage }}</p>
+          </ion-text>
+        </form>
 
-  <ion-button expand="block" fill="clear" routerLink="/login">¿Ya tienes cuenta? Inicia sesión</ion-button>
+        <ion-text class="ion-text-center ion-margin-top">
+          <p>¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
-

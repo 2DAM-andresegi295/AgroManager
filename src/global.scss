@@ -88,9 +88,255 @@ app-lista-parcelas {
     width: 100%;
   }
 }
+
 ion-content {
   --padding-top: env(safe-area-inset-top);
   --padding-bottom: env(safe-area-inset-bottom);
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+app-login {
+  .login-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-image: url('assets/images/fondo-login.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    img {
+      max-width: 150px;
+      height: auto;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .login-form {
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .login-form {
+      width: 30%;
+    }
+  }
+
+}
+
+app-home {
+  .home-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-image: url('assets/images/banner.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+
+    img {
+      max-width: 200px;
+      height: auto;
+    }
+
+  }
+
+  .welcome-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    h1 {
+      font-weight: bold;
+      color: var(--ion-color-primary);
+    }
+
+    p {
+      color: var(--ion-color-primary);
+      font-weight: bold;
+    }
+  }
+
+  .login-button {
+    margin-top: 10px;
+    --border-radius: 25px;
+    height: 50px;
+    width: 300px;
+  }
+
+  .alternative-options {
+    text-align: center;
+    margin-top: 20px;
+
+    a {
+      color: var(--ion-color-primary);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+  }
+
+  .translucent-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(255, 255, 255, 0.774); // Más blanca
+    backdrop-filter: blur(6px); // Menos difuminado
+    -webkit-backdrop-filter: blur(6px);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    color: #1A1A1A; // Texto oscuro para contraste
+    padding: 16px;
+  }
+}
+
+app-registro {
+  .registro-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .registro-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    background-image: url('assets/images/sierra.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .registro-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+  }
+}
+
+app-parcelas {
+  app-map {
+    width: 90% !important;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    /* que ocupe todo el ion-content */
+    text-align: center;
+    padding: 20px;
+    color: var(--ion-color-medium);
+  }
+
+  .empty-state ion-icon {
+    margin-bottom: 16px;
+  }
+
+  .empty-state ion-button {
+    margin-top: 24px;
+    width: 200px;
+  }
+
+
+}
+
+app-finanzas {
+  .finanzas-content {
+    padding: 1rem;
+  }
+
+  .explotacion-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    text-align: center;
+  }
+
+  .estadisticas-card {
+    margin-top: 1rem;
+  }
+
+  ion-card-title {
+    font-size: 1.2rem;
+    text-align: center;
+  }
+
+  ion-card-content {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+
+  .estadistica-item {
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .chart-wrapper {
+    width: 100%;
+    height: 300px;
+    position: relative;
+  }
+
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+    color: var(--ion-color-medium);
+  }
+
+  .empty-state ion-icon {
+    margin-bottom: 16px;
+  }
+
+  .empty-state ion-button {
+    margin-top: 24px;
+    width: 200px;
+  }
+
 }

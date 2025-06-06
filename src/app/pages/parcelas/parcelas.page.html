@@ -6,16 +6,29 @@
     { text: 'Finanzas', url: '/finanzas' }
   ]">
 </app-menu>
-  <div class="ion-page" id="parcelas-content">
+
+<div class="ion-page" id="parcelas-content">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-          <ion-menu-button menu="parcelas-content"></ion-menu-button>
+        <ion-menu-button menu="parcelas-content"></ion-menu-button>
       </ion-buttons>
       <ion-title>Parcelas</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <app-lista-parcelas [parcelas]="parcelas"></app-lista-parcelas>
+
+  <ion-content class="ion-padding">
+    <ng-container *ngIf="parcelas?.length > 0; else noParcelas">
+      <app-lista-parcelas [parcelas]="parcelas"></app-lista-parcelas>
+    </ng-container>
+
+    <ng-template #noParcelas>
+      <div class="empty-state">
+        <ion-icon name="leaf-outline" size="large" color="medium"></ion-icon>
+        <h2>No tienes parcelas registradas</h2>
+        <p>Empieza añadiendo tu primera parcela para comenzar a gestionar tu campo.</p>
+        <ion-button color="primary" routerLink="/add-parcela">Añadir Parcela</ion-button>
+      </div>
+    </ng-template>
   </ion-content>
 </div>

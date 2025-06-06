@@ -19,6 +19,8 @@ export class RegistroPage implements OnInit {
   errorMessage: string = '';
 
 
+
+
   constructor(private authService: AuthService, private router: Router, private loadingCtrl: LoadingController) { }
 
   ngOnInit() {
@@ -40,7 +42,6 @@ export class RegistroPage implements OnInit {
         this.usuario.password,
       );
 
-      // Redirigir después de registro exitoso
       this.router.navigate(['/login']);
     } catch (error) {
       this.errorMessage = this.traducirError((error as { code: string }).code);
@@ -60,6 +61,13 @@ export class RegistroPage implements OnInit {
         return 'Error al registrarse. Intenta nuevamente';
     }
   }
+  get passwordMismatch(): boolean {
+  return (
+    !!this.usuario.password &&
+    !!this.usuario.confirmPassword &&
+    this.usuario.password !== this.usuario.confirmPassword
+  );
+}
 
 
 }

@@ -12,6 +12,7 @@ import { LoadingController } from '@ionic/angular';
 export class LoginPage implements OnInit {
   email: string = '';
   password: string = '';
+  loginError = '';
 
   errorMessage: string = '';
 
@@ -39,6 +40,7 @@ export class LoginPage implements OnInit {
       }
     } catch (error) {
       this.errorMessage = (error as Error).message;
+      this.loginError = 'Correo o contraseña incorrectos.';
     } finally {
       loading.dismiss();
     }

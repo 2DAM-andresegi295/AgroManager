@@ -1,32 +1,28 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Agro manager </ion-title>
-  </ion-toolbar>
-  <div class="contenedor-banner">
-    <ion-img src="../../assets/images/banner.jpg" class="banner"></ion-img>
-  </div>
-</ion-header>
+<ion-content class="home-content">
+  <div class="home-container">
+    <div class="logo-container">
+      <img src="assets/images/logo.jpg" alt="Logo" />
+    </div>
+    <ion-card class="translucent-card">
+      <ion-card-content>
+        <div class="welcome-section">
+          <h1>Bienvenido</h1>
+          <p>Conéctate para acceder a tu cuenta y disfrutar de una gran gestión agropecuaria.</p>
+          <ion-button
+            expand="block"
+            shape="round"
+            color="primary"
+            routerLink="/login"
+            class="login-button"
+          >
+            Iniciar Sesión
+          </ion-button>
+        </div>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="welcome-section">
-    <h1>Bienvenido</h1>
-    <p>
-      Conéctate para acceder a tu cuenta y disfrutar de todos los beneficios.
-    </p>
-
-    <!-- Login -->
-    <ion-button
-      expand="block"
-      shape="round"
-      color="primary"
-      routerLink="/login"
-      class="login-button">
-      Iniciar Sesión
-    </ion-button>
-  </div>
-
-  <!-- Registro -->
-  <div class="alternative-options">
-    <p>¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+        <div class="alternative-options">
+          <p>¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+        </div>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

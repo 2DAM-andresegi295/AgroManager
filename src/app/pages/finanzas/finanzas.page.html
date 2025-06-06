@@ -4,6 +4,7 @@
   [items]="[{ text: 'Volver', url: '/parcelas' }]"
 >
 </app-menu>
+
 <div class="ion-page" id="finanzas-content">
   <ion-header>
     <ion-toolbar>
@@ -13,58 +14,67 @@
       <ion-title>Finanzas</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-content>
-    <ion-segment (ionChange)="cambiarExplotacion($event.detail.value)">
-      <ion-segment-button *ngFor="let expl of datos" [value]="expl">
-        <ion-label>{{ expl.name }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
 
-    <ion-segment (ionChange)="seleccionarVista($event.detail.value!)">
-      <ion-segment-button value="explotacion">
-        <ion-label>Por Explotación</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="mensual">
-        <ion-label>Variables por Mes</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+  <ion-content fullscreen>
+    <div *ngIf="!datos || datos.length === 0" class="empty-state">
+      <ion-icon name="wallet-outline" size="large" color="medium"></ion-icon>
+      <h2>No hay datos financieros disponibles</h2>
+      <p>Añade información financiera para empezar a controlar tus gastos e ingresos.</p>
+      <ion-button color="primary" routerLink="/parcelas">Volver a Parcelas</ion-button>
+    </div>
 
-    <h2>{{ selectedExplotacion?.name }}</h2>
-    <canvas #barChartCanvas></canvas>
-    <div *ngIf="estadisticas && vistaSeleccionada === 'explotacion'">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Estadísticas de la explotación</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <p>
-            <strong>Gastos fijos:</strong> €{{ estadisticas.totalFijos |
-            number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Gastos variables:</strong> €{{ estadisticas.totalVariables |
-            number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Total:</strong> €{{ estadisticas.totalGastos |
-            number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Media por categoría:</strong> €{{ estadisticas.media |
-            number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Mínimo:</strong> €{{ estadisticas.min | number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Máximo:</strong> €{{ estadisticas.max | number:'1.2-2' }}
-          </p>
-          <p>
-            <strong>Desviación estándar:</strong> €{{
-            estadisticas.desviacionEstandar | number:'1.2-2' }}
-          </p>
-        </ion-card-content>
-      </ion-card>
+    <div *ngIf="datos && datos.length > 0">
+      <ion-segment (ionChange)="cambiarExplotacion($event.detail.value)">
+        <ion-segment-button *ngFor="let expl of datos" [value]="expl">
+          <ion-label>{{ expl.name }}</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <ion-segment (ionChange)="seleccionarVista($event.detail.value!)">
+        <ion-segment-button value="explotacion">
+          <ion-label>Por Explotación</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="mensual">
+          <ion-label>Variables por Mes</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+
+      <h2 class="explotacion-title">{{ selectedExplotacion?.name }}</h2>
+
+      <div class="chart-wrapper">
+        <canvas #barChartCanvas></canvas>
+      </div>
+
+      <div *ngIf="estadisticas && vistaSeleccionada === 'explotacion'" class="estadisticas-card">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>Estadísticas de la explotación</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="estadistica-item">
+              <strong>Gastos fijos:</strong> €{{ estadisticas.totalFijos | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Gastos variables:</strong> €{{ estadisticas.totalVariables | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Total:</strong> €{{ estadisticas.totalGastos | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Media por categoría:</strong> €{{ estadisticas.media | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Mínimo:</strong> €{{ estadisticas.min | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Máximo:</strong> €{{ estadisticas.max | number:'1.2-2' }}
+            </div>
+            <div class="estadistica-item">
+              <strong>Desviación estándar:</strong> €{{ estadisticas.desviacionEstandar | number:'1.2-2' }}
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
     </div>
   </ion-content>
 </div>
