@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Geolocation } from '@capacitor/geolocation';
+import { Geolocation, Position } from '@capacitor/geolocation';
 
 
 @Injectable({
@@ -9,13 +9,28 @@ export class GeolocaclizacionService {
 
   constructor() { }
   async getGeolocalizacion() {
-    const coordenadas = await Geolocation.getCurrentPosition();
+    try {
+      // Verificar y solicitar permisos
+      const permissions = await Geolocation.checkPermissions();
+      if (permissions.location !== 'granted') {
+        await Geolocation.requestPermissions();
+      }
 
-    const latLngLiteral: google.maps.LatLngLiteral = {
-      lat: coordenadas.coords.latitude,
-      lng: coordenadas.coords.longitude
-    };
+      // Obtener ubicación con alta precisión
+      const coordenadas: Position = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      });
 
-    return latLngLiteral;
+      return {
+        lat: coordenadas.coords.latitude,
+        lng: coordenadas.coords.longitude
+      };
+
+    } catch (error) {
+      console.error('Error al obtener geolocalización:', error);
+      return null;
+    }
   }
 }

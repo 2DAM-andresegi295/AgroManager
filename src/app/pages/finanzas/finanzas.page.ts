@@ -41,6 +41,7 @@ export class FinanzasPage implements OnInit, AfterViewInit {
         }
       });
     });
+
     if (!usuario) {
       throw new Error('Usuario no autenticado');
     }
@@ -51,15 +52,24 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     console.log(this.parcelas);
 
     this.datos = this.parcelas;
-    this.selectedExplotacion = this.datos[0];
 
-    this.chartReady = true;
-    this.renderChart();
+    if (this.datos.length > 0) {
+      this.selectedExplotacion = this.datos[0];
+
+      // Asegurarse de esperar al ViewChild:
+      setTimeout(() => {
+        this.chartReady = true;
+        this.seleccionarVista(this.vistaSeleccionada);
+      });
+    }
   }
 
   ngAfterViewInit() {
-    if (this.chartReady && this.selectedExplotacion) {
-      this.seleccionarVista(this.vistaSeleccionada);
+    if (this.selectedExplotacion) {
+      setTimeout(() => {
+        this.chartReady = true;
+        this.seleccionarVista(this.vistaSeleccionada);
+      }, 0);
     }
   }
 
@@ -70,67 +80,76 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       this.chart.destroy();
     }
 
-    if (this.vistaSeleccionada === 'mensual') {
-      this.renderChartVariablesPorMes();
-    } else {
-      this.renderChart();
-    }
+    this.seleccionarVista(this.vistaSeleccionada);
   }
 
   renderChart() {
     if (!this.selectedExplotacion) return;
 
+    const exp = this.selectedExplotacion;
+    const fechaCreacion = new Date(exp.fechaCreacion);
+    const hoy = new Date();
+
     const labels: string[] = [];
     const data: number[] = [];
 
-    const exp = this.selectedExplotacion;
+    // 1. Gastos fijos acumulados por tipo
+    for (const tipo in exp.gastosFijos) {
+      const gasto = exp.gastosFijos[tipo];
 
-    let totalFijos = 0;
-
-    for (const key in exp.gastosFijos) {
-      const gasto = exp.gastosFijos[key];
       let total = 0;
 
-      if (gasto.precio_vez && gasto.veces_ano) {
-        total = +gasto.precio_vez * +gasto.veces_ano;
-      } else if (gasto.precio_kilo && gasto.kilosPorVez && gasto.veces_semana) {
-        total =
-          (+gasto.precio_kilo * +gasto.kilosPorVez * +gasto.veces_semana * 52) /
-          12;
+      const diffMs = hoy.getTime() - fechaCreacion.getTime();
+      const semanas = diffMs / (1000 * 60 * 60 * 24 * 7);
+      const meses = semanas / 4.345;
+      const años = semanas / 52;
+
+      if (gasto.veces_ano && gasto.precio_vez) {
+        total += gasto.veces_ano * años * gasto.precio_vez;
       } else if (
+        gasto.veces_semana &&
         gasto.precio_litro &&
-        gasto.litrosPorVez &&
-        gasto.veces_semana
+        gasto.litrosPorVez
       ) {
-        total =
-          (+gasto.precio_litro *
-            +gasto.litrosPorVez *
-            +gasto.veces_semana *
-            52) /
-          12;
+        total +=
+          semanas *
+          gasto.veces_semana *
+          gasto.litrosPorVez *
+          gasto.precio_litro;
+      } else if (gasto.veces_semana && gasto.precio_kilo && gasto.kilosPorVez) {
+        total +=
+          semanas * gasto.veces_semana * gasto.kilosPorVez * gasto.precio_kilo;
       }
 
-      labels.push(key);
-      data.push(total);
-      totalFijos += total;
+      labels.push(tipo);
+      data.push(parseFloat(total.toFixed(2)));
     }
 
-    // Gastos variables
-    const variablesArray = Array.isArray(exp.gastosVariables)
-      ? exp.gastosVariables.map((g: any) => g.importe)
+    // 2. Sumar todos los gastos variables en una sola categoría "Variables"
+    const gastosVariables = Array.isArray(exp.gastosVariables)
+      ? exp.gastosVariables
       : [];
+    let totalVariables = 0;
 
-    const totalVariables = variablesArray.reduce(
-      (acc: number, val: number) => acc + val,
-      0
-    );
+    for (const gasto of gastosVariables) {
+      if (!gasto.fecha) continue;
+
+      const fechaGasto = new Date(gasto.fecha);
+      if (fechaGasto < fechaCreacion || fechaGasto > hoy) continue;
+
+      totalVariables += gasto.importe;
+    }
+
     labels.push('Variables');
-    data.push(totalVariables);
+    data.push(parseFloat(totalVariables.toFixed(2)));
+
+    // 3. Crear la gráfica
+    if (this.chart) this.chart.destroy();
 
     const backgroundColors = labels.map((label, i) =>
       label === 'Variables'
         ? 'rgba(255, 99, 132, 0.6)'
-        : `rgba(${(i * 50) % 255}, ${(i * 80) % 255}, ${(i * 100) % 255}, 0.6)`
+        : `rgba(${(i * 60) % 255}, ${(i * 120) % 255}, ${(i * 180) % 255}, 0.6)`
     );
 
     const canvas = this.barChartCanvas.nativeElement;
@@ -142,7 +161,7 @@ export class FinanzasPage implements OnInit, AfterViewInit {
         labels,
         datasets: [
           {
-            label: 'Gastos (€)',
+            label: 'Gastos acumulados desde creación (€)',
             data,
             backgroundColor: backgroundColors,
             borderColor: 'rgba(75, 192, 192, 1)',
@@ -158,23 +177,43 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       },
     });
 
-    // Estadísticas detalladas
-    const totalGastos = totalFijos + totalVariables;
-    const media = data.length > 0 ? totalGastos / data.length : 0;
-    const max = Math.max(...data);
-    const min = Math.min(...data);
-    const desviacionEstandar = Math.sqrt(
-      data.reduce((sum, val) => sum + Math.pow(val - media, 2), 0) / data.length
-    );
+    // Estadísticas generales
+    const dataFijos = data.slice(0, data.length - 1);
+    const dataVariables = [data[data.length - 1]];
 
-    this.estadisticas = {
+    this.estadisticas = this.calcularEstadisticasAvanzadas(
+      dataFijos,
+      dataVariables
+    );
+  }
+  calcularEstadisticasAvanzadas(dataFijos: number[], dataVariables: number[]) {
+    const totalFijos = dataFijos.reduce((a, b) => a + b, 0);
+    const totalVariables = dataVariables.reduce((a, b) => a + b, 0);
+    const totalGastos = totalFijos + totalVariables;
+
+    const media = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+    const max = (arr: number[]) => (arr.length ? Math.max(...arr) : 0);
+    const min = (arr: number[]) => (arr.length ? Math.min(...arr) : 0);
+
+    const mediaFijos = media(dataFijos);
+    const mediaVariables = media(dataVariables);
+
+    const porcentaje = (valor: number, total: number) =>
+      total ? (valor / total) * 100 : 0;
+
+    return {
       totalFijos,
       totalVariables,
       totalGastos,
-      media,
-      max,
-      min,
-      desviacionEstandar,
+      mediaFijos,
+      mediaVariables,
+      maxFijos: max(dataFijos),
+      maxVariables: max(dataVariables),
+      minFijos: min(dataFijos),
+      minVariables: min(dataVariables),
+
+      porcentajeFijos: porcentaje(totalFijos, totalGastos),
+      porcentajeVariables: porcentaje(totalVariables, totalGastos),
     };
   }
 
@@ -238,7 +277,7 @@ export class FinanzasPage implements OnInit, AfterViewInit {
   }
 
   seleccionarVista(vista: any) {
-    if (vista !== 'mensual' && vista !== 'explotacion') return;
+    if (!['mensual', 'explotacion', 'semanal', 'anual'].includes(vista)) return;
 
     this.vistaSeleccionada = vista;
 
@@ -246,13 +285,22 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       this.chart.destroy();
     }
 
-    if (vista === 'mensual') {
-      this.renderChartVariablesPorMes();
-    } else {
-      this.renderChart();
+    switch (vista) {
+      case 'mensual':
+        this.renderChartVariablesPorPeriodo('mes');
+        break;
+      case 'semanal':
+        this.renderChartVariablesPorPeriodo('semana');
+        break;
+      case 'anual':
+        this.renderChartVariablesPorPeriodo('año');
+        break;
+      default:
+        this.renderChart();
     }
   }
-  private ajustarResolucionCanvas(canvas: HTMLCanvasElement) {
+
+  ajustarResolucionCanvas(canvas: HTMLCanvasElement) {
     const dpr = window.devicePixelRatio || 1;
     const rect = canvas.getBoundingClientRect();
 
@@ -263,5 +311,209 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     if (ctx) {
       ctx.scale(dpr, dpr);
     }
+  }
+  estimarGastosFijos(
+    gastosFijos: any,
+    periodo: 'semana' | 'mes' | 'año',
+    fechaInicioStr: string
+  ): number {
+    if (!gastosFijos || !fechaInicioStr) return 0;
+
+    const fechaInicio = new Date(fechaInicioStr);
+    const hoy = new Date();
+
+    const diffEnMs = hoy.getTime() - fechaInicio.getTime();
+    const semanas = diffEnMs / (1000 * 60 * 60 * 24 * 7);
+    const meses = semanas / 4.345;
+    const años = semanas / 52;
+
+    let total = 0;
+
+    for (const tipo in gastosFijos) {
+      const gf = gastosFijos[tipo];
+
+      if (gf.veces_ano && gf.precio_vez) {
+        const veces =
+          (gf.veces_ano *
+            (periodo === 'año' ? años : periodo === 'mes' ? meses : semanas)) /
+          (periodo === 'año' ? 1 : periodo === 'mes' ? 12 : 52);
+        total += veces * gf.precio_vez;
+      }
+
+      if (gf.veces_semana && gf.precio_litro && gf.litrosPorVez) {
+        const veces = gf.veces_semana * semanas;
+        total += veces * gf.litrosPorVez * gf.precio_litro;
+      }
+
+      if (gf.veces_semana && gf.precio_kilo && gf.kilosPorVez) {
+        const veces = gf.veces_semana * semanas;
+        total += veces * gf.kilosPorVez * gf.precio_kilo;
+      }
+    }
+
+    return parseFloat(total.toFixed(2));
+  }
+
+  getSemanaDelAño(fecha: Date): number {
+    const primerDiaAño = new Date(fecha.getFullYear(), 0, 1);
+    const diasPasados = Math.floor(
+      (fecha.getTime() - primerDiaAño.getTime()) / (24 * 60 * 60 * 1000)
+    );
+    return Math.ceil((diasPasados + primerDiaAño.getDay() + 1) / 7);
+  }
+  renderChartVariablesPorPeriodo(periodo: 'semana' | 'mes' | 'año') {
+    const explotacion = this.selectedExplotacion;
+    if (!explotacion || !explotacion.fechaCreacion) return;
+
+    const fechaInicio = new Date(explotacion.fechaCreacion);
+    const hoy = new Date();
+    const gastosVariables = explotacion.gastosVariables || [];
+
+    const gastosPorPeriodo: { [key: string]: number } = {};
+    const labels: string[] = [];
+
+    // 1. Generar todos los períodos desde la fecha de creación
+    let cursor = new Date(fechaInicio);
+    while (cursor <= hoy) {
+      let key: string;
+      const siguiente = new Date(cursor);
+
+      if (periodo === 'semana') {
+        const semana = this.getSemanaDelAño(cursor);
+        key = `Semana ${semana} ${cursor.getFullYear()}`;
+        siguiente.setDate(cursor.getDate() + 7);
+      } else if (periodo === 'mes') {
+        key = `${cursor.toLocaleString('default', {
+          month: 'long',
+        })} ${cursor.getFullYear()}`;
+        siguiente.setMonth(cursor.getMonth() + 1);
+      } else {
+        key = `${cursor.getFullYear()}`;
+        siguiente.setFullYear(cursor.getFullYear() + 1);
+      }
+
+      labels.push(key);
+      gastosPorPeriodo[key] = 0;
+      cursor = siguiente;
+    }
+
+    // 2. Sumar gastos variables a cada período correspondiente
+    for (const gasto of gastosVariables) {
+      const fecha = new Date(gasto.fecha);
+      let key: string;
+
+      if (periodo === 'semana') {
+        key = `Semana ${this.getSemanaDelAño(fecha)} ${fecha.getFullYear()}`;
+      } else if (periodo === 'mes') {
+        key = `${fecha.toLocaleString('default', {
+          month: 'long',
+        })} ${fecha.getFullYear()}`;
+      } else {
+        key = `${fecha.getFullYear()}`;
+      }
+
+      if (gastosPorPeriodo[key] === undefined) {
+        gastosPorPeriodo[key] = 0;
+        labels.push(key);
+      }
+
+      gastosPorPeriodo[key] += gasto.importe;
+    }
+
+    // 3. Añadir gastos fijos estimados por período
+    const fijoEstimado = this.estimarGastoFijoPorPeriodo(
+      explotacion.gastosFijos,
+      periodo
+    );
+
+    for (const key of labels) {
+      gastosPorPeriodo[key] += fijoEstimado;
+    }
+
+    // 4. Renderizar gráfico
+    const data = labels.map((key) =>
+      parseFloat(gastosPorPeriodo[key].toFixed(2))
+    );
+
+    if (this.chart) {
+      this.chart.destroy();
+    }
+
+    const canvas = this.barChartCanvas.nativeElement;
+    this.ajustarResolucionCanvas(canvas);
+
+    this.chart = new Chart(canvas, {
+      type: 'bar',
+      data: {
+        labels,
+        datasets: [
+          {
+            label: `Gasto total (${periodo})`,
+            data,
+            backgroundColor: 'rgba(255, 99, 132, 0.6)',
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Importe (€)' },
+          },
+          x: {
+            title: {
+              display: true,
+              text: periodo.charAt(0).toUpperCase() + periodo.slice(1),
+            },
+          },
+        },
+      },
+    });
+  }
+
+  estimarGastoFijoPorPeriodo(
+    gastosFijos: any,
+    periodo: 'semana' | 'mes' | 'año'
+  ) {
+    let total = 0;
+
+    for (const tipo in gastosFijos) {
+      const g = gastosFijos[tipo];
+
+      if (g.veces_ano && g.precio_vez) {
+        const veces =
+          periodo === 'año'
+            ? g.veces_ano
+            : periodo === 'mes'
+            ? g.veces_ano / 12
+            : g.veces_ano / 52;
+        total += veces * g.precio_vez;
+      }
+
+      if (g.veces_semana && g.precio_litro && g.litrosPorVez) {
+        const veces =
+          periodo === 'semana'
+            ? g.veces_semana
+            : periodo === 'mes'
+            ? g.veces_semana * 4.345
+            : g.veces_semana * 52;
+        total += veces * g.litrosPorVez * g.precio_litro;
+      }
+
+      if (g.veces_semana && g.precio_kilo && g.kilosPorVez) {
+        const veces =
+          periodo === 'semana'
+            ? g.veces_semana
+            : periodo === 'mes'
+            ? g.veces_semana * 4.345
+            : g.veces_semana * 52;
+        total += veces * g.kilosPorVez * g.precio_kilo;
+      }
+    }
+
+    return total;
   }
 }

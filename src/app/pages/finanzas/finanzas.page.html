@@ -17,10 +17,15 @@
 
   <ion-content fullscreen>
     <div *ngIf="!datos || datos.length === 0" class="empty-state">
-      <ion-icon name="wallet-outline" size="large" color="medium"></ion-icon>
+      <ion-icon name="wallet-outline" size="large" ></ion-icon>
       <h2>No hay datos financieros disponibles</h2>
-      <p>Añade información financiera para empezar a controlar tus gastos e ingresos.</p>
-      <ion-button color="primary" routerLink="/parcelas">Volver a Parcelas</ion-button>
+      <p>
+        Añade información financiera para empezar a controlar tus gastos e
+        ingresos.
+      </p>
+      <ion-button color="primary" routerLink="/parcelas"
+        >Volver a Parcelas</ion-button
+      >
     </div>
 
     <div *ngIf="datos && datos.length > 0">
@@ -35,7 +40,13 @@
           <ion-label>Por Explotación</ion-label>
         </ion-segment-button>
         <ion-segment-button value="mensual">
-          <ion-label>Variables por Mes</ion-label>
+          <ion-label>Mensual</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="semanal">
+          <ion-label>Semanal</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="anual">
+          <ion-label>Anual</ion-label>
         </ion-segment-button>
       </ion-segment>
 
@@ -45,32 +56,54 @@
         <canvas #barChartCanvas></canvas>
       </div>
 
-      <div *ngIf="estadisticas && vistaSeleccionada === 'explotacion'" class="estadisticas-card">
+      <div
+        *ngIf="estadisticas && vistaSeleccionada === 'explotacion'"
+        class="estadisticas-card"
+      >
         <ion-card>
           <ion-card-header>
             <ion-card-title>Estadísticas de la explotación</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <div class="estadistica-item">
-              <strong>Gastos fijos:</strong> €{{ estadisticas.totalFijos | number:'1.2-2' }}
+              <strong>Gastos fijos:</strong> {{ estadisticas.totalFijos |
+              number:'1.2-2' }} ({{ estadisticas.porcentajeFijos |
+              number:'1.2-2' }}%)€
             </div>
             <div class="estadistica-item">
-              <strong>Gastos variables:</strong> €{{ estadisticas.totalVariables | number:'1.2-2' }}
+              <strong>Gastos variables:</strong> {{ estadisticas.totalVariables
+              | number:'1.2-2' }} ({{ estadisticas.porcentajeVariables |
+              number:'1.2-2' }}%)€
             </div>
             <div class="estadistica-item">
-              <strong>Total:</strong> €{{ estadisticas.totalGastos | number:'1.2-2' }}
+              <strong>Total gastos:</strong> {{ estadisticas.totalGastos |
+              number:'1.2-2' }}€
+            </div>
+            <hr />
+            <div class="estadistica-item">
+              <strong>Media gastos fijos:</strong> €{{ estadisticas.mediaFijos |
+              number:'1.2-2' }}€
             </div>
             <div class="estadistica-item">
-              <strong>Media por categoría:</strong> €{{ estadisticas.media | number:'1.2-2' }}
+              <strong>Media gastos variables:</strong> {{
+              estadisticas.mediaVariables | number:'1.2-2' }}€
+            </div>
+            <hr />
+            <div class="estadistica-item">
+              <strong>Mínimo gasto fijo:</strong> {{ estadisticas.minFijos |
+              number:'1.2-2' }}€
             </div>
             <div class="estadistica-item">
-              <strong>Mínimo:</strong> €{{ estadisticas.min | number:'1.2-2' }}
+              <strong>Mínimo gasto variable:</strong> {{
+              estadisticas.minVariables | number:'1.2-2' }}€
             </div>
             <div class="estadistica-item">
-              <strong>Máximo:</strong> €{{ estadisticas.max | number:'1.2-2' }}
+              <strong>Máximo gasto fijo:</strong> {{ estadisticas.maxFijos |
+              number:'1.2-2' }}€
             </div>
             <div class="estadistica-item">
-              <strong>Desviación estándar:</strong> €{{ estadisticas.desviacionEstandar | number:'1.2-2' }}
+              <strong>Máximo gasto variable:</strong> {{
+              estadisticas.maxVariables | number:'1.2-2' }}€
             </div>
           </ion-card-content>
         </ion-card>

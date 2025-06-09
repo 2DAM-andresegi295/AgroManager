@@ -1,6 +1,6 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
-:root {
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');:root {
   /* Primary: Verde principal */
   --ion-color-primary: #59A36B;
   --ion-color-primary-rgb: 89, 163, 107;
@@ -42,12 +42,13 @@
   --ion-color-dark-tint: #2e2e2e;
 
   /* Medium: Verde claro suave */
-  --ion-color-medium: #9AC8A5;
-  --ion-color-medium-rgb: 154, 200, 165;
+  --ion-color-medium: #e9ffee;
+  --ion-color-medium-rgb: 233, 255, 238;
   --ion-color-medium-contrast: #000000;
   --ion-color-medium-contrast-rgb: 0, 0, 0;
-  --ion-color-medium-shade: #8bb893;
-  --ion-color-medium-tint: #add1b3;
+  --ion-color-medium-shade: #d0e6d5;
+  --ion-color-medium-tint: #f2fff4;
+
 
   /* Light: Gris claro */
   --ion-color-light: #f4f5f8;
@@ -56,6 +57,11 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d9db;
   --ion-color-light-tint: #f5f6f9;
+
+  // Color de fondo
+  --ion-background-color: var(--ion-color-medium);
+
+  //Fuente
+  --ion-font-family: 'Inter', sans-serif;
+
 }
-
-

@@ -289,7 +289,7 @@
           >
             <ion-label>
               <h2>{{ gasto.tipo || "Sin tipo" }}</h2>
-              <p>Importe: €{{ gasto.importe | number : "1.2-2" }}</p>
+              <p>Importe: {{ gasto.importe | number : "1.2-2" }}€</p>
               <p>Fecha: {{ gasto.fecha | date : "dd/MM/yyyy" }}</p>
             </ion-label>
             <ion-button
@@ -304,29 +304,29 @@
 
         <div class="buttons-container">
           <ion-button
-            expand="block"
+            shape="round"
             color="primary"
             (click)="cambiarModo()"
             *ngIf="!editable"
           >
-            Editar
+            <ion-icon name="create-outline"></ion-icon> Editar
           </ion-button>
 
           <ion-button
-            expand="block"
+            shape="round"
             color="secondary"
             (click)="anadirGastosVariables()"
             *ngIf="!editable"
           >
-            Añadir gastos variables
+          <ion-icon name="bag-add-outline"></ion-icon> Añadir gastos variables
           </ion-button>
           <ion-button
-            expand="block"
+            shape="round"
             color="success"
             (click)="guardarCambios()"
             *ngIf="editable"
           >
-            Guardar
+           <ion-icon name="save-outline"></ion-icon>  Guardar
           </ion-button>
         </div>
       </ion-card-content>
@@ -380,7 +380,7 @@
           </ion-item>
 
           <ion-button
-            expand="block"
+            shape="round"
             color="success"
             (click)="guardarGastoVariable()"
           >

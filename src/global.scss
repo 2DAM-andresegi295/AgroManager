@@ -35,7 +35,10 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 
+
+
 //------------------------------  Estilos pagina Parcela ----------------------------------------------------------------------------
+
 app-add-parcela {
   .mapa {
     display: flex;
@@ -70,6 +73,16 @@ app-add-parcela {
       margin-right: 1%;
     }
   }
+
+  .horizontal-inputs {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .input-group {
+    flex: 1;
+  }
 }
 
 .map {
@@ -82,10 +95,30 @@ ion-input {
   border-radius: 3;
 }
 
+ion-icon {
+  margin-right: 5px;
+  font-size: 1em
+}
+
 app-lista-parcelas {
-  .mapa {
-    height: 300px;
-    width: 100%;
+
+  ion-card {
+    ion-card-content {
+      .mapa {
+        height: 300px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+
+        app-map {
+          width: 90%;
+          height: 90%;
+        }
+      }
+    }
   }
 }
 
@@ -248,11 +281,13 @@ app-registro {
 }
 
 app-parcelas {
+
   app-map {
     width: 90% !important;
   }
 
   .empty-state {
+    color: var(--ion-color-primary);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -261,17 +296,15 @@ app-parcelas {
     /* que ocupe todo el ion-content */
     text-align: center;
     padding: 20px;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-primary);
   }
 
-  .empty-state ion-icon {
-    margin-bottom: 16px;
-  }
 
   .empty-state ion-button {
     margin-top: 24px;
     width: 200px;
   }
+
 
 
 }
@@ -327,7 +360,7 @@ app-finanzas {
     height: 100%;
     text-align: center;
     padding: 20px;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-primary);
   }
 
   .empty-state ion-icon {

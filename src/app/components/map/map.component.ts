@@ -58,7 +58,7 @@ export class MapComponent implements OnInit {
       });
 
       loader.load().then(async () => {
-        let centro :google.maps.LatLngLiteral;
+        let centro :any;
         if(this.centroExterno!=null){
            centro= this.calcularCentroParcela(this.parcelaExterna);
         }else{

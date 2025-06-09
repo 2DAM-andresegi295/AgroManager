@@ -5,7 +5,6 @@ import { MapComponent } from 'src/app/components/map/map.component';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { firstValueFrom } from 'rxjs';
 
-
 @Component({
   selector: 'app-add-parcela',
   templateUrl: './add-parcela.page.html',
@@ -107,6 +106,7 @@ export class AddParcelaPage implements OnInit {
           especie: this.especie,
           cabezasGanado: this.cabezasGanado,
           finalidad: this.finalidad,
+          fechaCreacion: new Date().toISOString(),
           fecha_sacrificio: this.fechaRecoleccion,
           gastosFijos: {
             hidratacion: {
@@ -128,7 +128,7 @@ export class AddParcelaPage implements OnInit {
               precio_vez: this.precioSupervision,
             },
           },
-          gastosVariables:{}
+          gastosVariables: {},
         });
       } else if (this.tipoExplotacion === 'agricola') {
         await this.parcelasService.addParcela({
@@ -138,8 +138,9 @@ export class AddParcelaPage implements OnInit {
           vertices: this.vertices,
           tipoExplotacion: this.tipoExplotacion,
           especie: this.especie,
+          fechaCreacion: new Date().toISOString(),
           fecha_recoleccion: this.fechaRecoleccion,
-          finanalidad:this.finalidad,
+          finanalidad: this.finalidad,
           gastosFijos: {
             riego: {
               veces_semana: this.frecuenciaRiego,
@@ -159,7 +160,7 @@ export class AddParcelaPage implements OnInit {
               precio_vez: this.precioSupervision,
             },
           },
-          gastosVariables:{}
+          gastosVariables: {},
         });
       }
 
@@ -174,10 +175,9 @@ export class AddParcelaPage implements OnInit {
   get verticesReverso() {
     return [...this.vertices].reverse();
   }
-  sePuedeAnadir():boolean{
-    let resultado=false;
-    if(this.nombreParcela&&this.tipoExplotacion&&this.especie&&(true)){
-
+  sePuedeAnadir(): boolean {
+    let resultado = false;
+    if (this.nombreParcela && this.tipoExplotacion && this.especie && true) {
     }
     return resultado;
   }
