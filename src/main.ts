@@ -6,6 +6,3 @@ platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.log(err));
 
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('firebase-messaging-sw.js');
-}

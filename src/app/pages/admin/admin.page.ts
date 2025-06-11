@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import Parcela from 'src/app/interfaces/parcela.interface';
 import { ParcelasService } from 'src/app/services/parcelas/parcelas.service';
 import { Router  } from '@angular/router';
 

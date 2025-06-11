@@ -29,7 +29,7 @@
           </ion-note>
 
           <ion-item [class.ion-invalid]="confirmPasswordField.invalid && confirmPasswordField.touched || passwordMismatch">
-            <ion-label position="floating">Confirmar Contraseña</ion-label>
+            <ion-label position="floating">Confirmar contraseña</ion-label>
             <ion-input type="password" [(ngModel)]="usuario.confirmPassword" name="confirmPassword" required #confirmPasswordField="ngModel"></ion-input>
           </ion-item>
           <ion-note slot="error" color="danger" *ngIf="usuario.password !== usuario.confirmPassword && confirmPasswordField.touched">

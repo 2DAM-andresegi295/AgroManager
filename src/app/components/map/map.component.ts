@@ -115,8 +115,8 @@ export class MapComponent implements OnInit {
       strokeWeight: 2,
       fillColor: "#FF0000",
       fillOpacity: 0.35,
-      editable: false, // Si quieres que sea editable
-      draggable: false, // Si quieres que se pueda mover
+      editable: false,
+      draggable: false,
       map: this.map
     });
   }
@@ -128,7 +128,6 @@ export class MapComponent implements OnInit {
         map: this.map,
         animation: google.maps.Animation.DROP
       });
-      //this.marcadores[this.marcadores.length-1].setPosition(this.ultimoClickLatLng);
     }
     else{
       this.marcadores[0]=new google.maps.Marker({
