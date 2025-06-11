@@ -155,10 +155,6 @@ export class AddParcelaPage implements OnInit {
               veces_ano: this.frecuenciaDesaparasitacion,
               precio_vez: this.precioDesparasitacion,
             },
-            veterinario: {
-              veces_ano: this.frecuenciaVeterinario,
-              precio_vez: this.precioSupervision,
-            },
           },
           gastosVariables: {},
         });

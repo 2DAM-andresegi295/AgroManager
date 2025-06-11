@@ -125,7 +125,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       data.push(parseFloat(total.toFixed(2)));
     }
 
-    // 2. Sumar todos los gastos variables en una sola categoría "Variables"
     const gastosVariables = Array.isArray(exp.gastosVariables)
       ? exp.gastosVariables
       : [];
@@ -191,7 +190,8 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     const totalVariables = dataVariables.reduce((a, b) => a + b, 0);
     const totalGastos = totalFijos + totalVariables;
 
-    const media = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+    const media = (arr: number[]) =>
+      arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
     const max = (arr: number[]) => (arr.length ? Math.max(...arr) : 0);
     const min = (arr: number[]) => (arr.length ? Math.min(...arr) : 0);
 
@@ -367,12 +367,13 @@ export class FinanzasPage implements OnInit, AfterViewInit {
 
     const fechaInicio = new Date(explotacion.fechaCreacion);
     const hoy = new Date();
-    const gastosVariables = explotacion.gastosVariables || [];
+    const gastosVariables = Array.isArray(explotacion.gastosVariables)
+      ? explotacion.gastosVariables
+      : [];
 
     const gastosPorPeriodo: { [key: string]: number } = {};
     const labels: string[] = [];
 
-    // 1. Generar todos los períodos desde la fecha de creación
     let cursor = new Date(fechaInicio);
     while (cursor <= hoy) {
       let key: string;
@@ -397,7 +398,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       cursor = siguiente;
     }
 
-    // 2. Sumar gastos variables a cada período correspondiente
     for (const gasto of gastosVariables) {
       const fecha = new Date(gasto.fecha);
       let key: string;
@@ -420,7 +420,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       gastosPorPeriodo[key] += gasto.importe;
     }
 
-    // 3. Añadir gastos fijos estimados por período
     const fijoEstimado = this.estimarGastoFijoPorPeriodo(
       explotacion.gastosFijos,
       periodo
@@ -430,7 +429,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       gastosPorPeriodo[key] += fijoEstimado;
     }
 
-    // 4. Renderizar gráfico
     const data = labels.map((key) =>
       parseFloat(gastosPorPeriodo[key].toFixed(2))
     );

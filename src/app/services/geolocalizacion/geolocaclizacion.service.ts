@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Geolocation, Position } from '@capacitor/geolocation';
+import { Capacitor } from '@capacitor/core';
+
 
 
 @Injectable({
@@ -10,10 +12,12 @@ export class GeolocaclizacionService {
   constructor() { }
   async getGeolocalizacion() {
     try {
-      // Verificar y solicitar permisos
-      const permissions = await Geolocation.checkPermissions();
-      if (permissions.location !== 'granted') {
-        await Geolocation.requestPermissions();
+      // Verificar permisos en plataformas que no son web
+      if (Capacitor.getPlatform() !== 'web') {
+        const permissions = await Geolocation.checkPermissions();
+        if (permissions.location !== 'granted') {
+          await Geolocation.requestPermissions();
+        }
       }
 
       // Obtener ubicación con alta precisión
