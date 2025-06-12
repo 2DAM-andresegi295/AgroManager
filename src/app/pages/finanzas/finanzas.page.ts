@@ -165,6 +165,8 @@ export class FinanzasPage implements OnInit, AfterViewInit {
             backgroundColor: backgroundColors,
             borderColor: 'rgba(75, 192, 192, 1)',
             borderWidth: 1,
+            minBarLength: 5,
+            maxBarThickness: 60,
           },
         ],
       },
@@ -176,7 +178,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
       },
     });
 
-    // Estadísticas generales
     const dataFijos = data.slice(0, data.length - 1);
     const dataVariables = [data[data.length - 1]];
 
@@ -258,6 +259,8 @@ export class FinanzasPage implements OnInit, AfterViewInit {
             backgroundColor: 'rgba(255, 159, 64, 0.6)',
             borderColor: 'rgba(255, 159, 64, 1)',
             borderWidth: 1,
+            minBarLength: 5,
+            maxBarThickness: 60,
           },
         ],
       },
@@ -451,6 +454,8 @@ export class FinanzasPage implements OnInit, AfterViewInit {
             backgroundColor: 'rgba(255, 99, 132, 0.6)',
             borderColor: 'rgba(255, 99, 132, 1)',
             borderWidth: 1,
+            minBarLength: 5,
+            maxBarThickness: 60,
           },
         ],
       },

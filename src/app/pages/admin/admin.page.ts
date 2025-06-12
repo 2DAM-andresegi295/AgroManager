@@ -52,6 +52,7 @@ export class AdminPage implements OnInit {
     this.router.navigate(['home']);
   }
   eliminarTodasLasParcelas(uid: string) {
-
+    this.parcelasServices.deleteParcelasPorUsuario(uid)
+    location.reload();
   }
 }
