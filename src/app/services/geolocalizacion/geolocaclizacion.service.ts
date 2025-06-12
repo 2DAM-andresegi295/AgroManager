@@ -12,7 +12,6 @@ export class GeolocaclizacionService {
   constructor() { }
   async getGeolocalizacion() {
     try {
-      // Verificar permisos en plataformas que no son web
       if (Capacitor.getPlatform() !== 'web') {
         const permissions = await Geolocation.checkPermissions();
         if (permissions.location !== 'granted') {
@@ -20,7 +19,6 @@ export class GeolocaclizacionService {
         }
       }
 
-      // Obtener ubicación con alta precisión
       const coordenadas: Position = await Geolocation.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 10000,

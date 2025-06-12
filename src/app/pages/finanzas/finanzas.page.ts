@@ -56,7 +56,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     if (this.datos.length > 0) {
       this.selectedExplotacion = this.datos[0];
 
-      // Asegurarse de esperar al ViewChild:
       setTimeout(() => {
         this.chartReady = true;
         this.seleccionarVista(this.vistaSeleccionada);
@@ -74,6 +73,8 @@ export class FinanzasPage implements OnInit, AfterViewInit {
   }
 
   cambiarExplotacion(explotacion: any) {
+
+
     this.selectedExplotacion = explotacion;
 
     if (this.chart) {
@@ -93,7 +94,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     const labels: string[] = [];
     const data: number[] = [];
 
-    // 1. Gastos fijos acumulados por tipo
     for (const tipo in exp.gastosFijos) {
       const gasto = exp.gastosFijos[tipo];
 
@@ -142,7 +142,6 @@ export class FinanzasPage implements OnInit, AfterViewInit {
     labels.push('Variables');
     data.push(parseFloat(totalVariables.toFixed(2)));
 
-    // 3. Crear la gráfica
     if (this.chart) this.chart.destroy();
 
     const backgroundColors = labels.map((label, i) =>

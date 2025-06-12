@@ -73,7 +73,6 @@ export class MapComponent implements OnInit {
           disableDefaultUI: true,
         });
 
-        // Inicializa marcador principal si hay posición
         if (this.ultimoClickLatLng) {
           this.marcadores[0] = new google.maps.Marker({
             position: this.ultimoClickLatLng,

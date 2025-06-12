@@ -29,7 +29,6 @@ export class AuthService {
     });
   }
 
-  // Login con email/password
   async login(email: string, password: string): Promise<any> {
     try {
       const result = await signInWithEmailAndPassword(
@@ -43,7 +42,6 @@ export class AuthService {
     }
   }
 
-  // Registro con email/password
   async registrar(email: string, password: string): Promise<any> {
     try {
       const result = await createUserWithEmailAndPassword(
